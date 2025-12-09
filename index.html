@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המעבר שלי 🏠</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            --bg-color: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #2d3436;
+            --accent-color: #6c5ce7;
+            --success-color: #00b894;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            background-attachment: fixed;
+            font-family: 'Rubik', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* כותרות ועיצוב כללי */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+        }
+
+        .main-header {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* כרטיסי KPI */
+        .kpi-card {
+            background: white;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-gradient);
+        }
+
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: -webkit-linear-gradient(#667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* מד התקדמות */
+        .progress-container {
+            background: white;
+            border-radius: 50px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 10px;
+        }
+        .progress-bar-custom {
+            height: 12px;
+            border-radius: 50px;
+            background: var(--secondary-gradient);
+            transition: width 0.6s ease;
+            width: 0%;
+        }
+
+        /* טבלה */
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            border: none;
+            color: #636e72;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 15px;
+        }
+
+        .table tbody tr {
+            transition: all 0.2s;
+            border-bottom: 1px solid #f1f2f6;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9f9ff;
+            transform: scale(1.005);
+        }
+
+        .table td {
+            border: none;
+            padding: 12px 10px;
+            vertical-align: middle;
+        }
+
+        /* שדות קלט בתוך הטבלה */
+        .table input, .table select {
+            border: 1px solid transparent;
+            background: transparent;
+            border-radius: 8px;
+            padding: 6px;
+            width: 100%;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .table input:focus, .table select:focus {
+            background: white;
+            border-color: #a29bfe;
+            box-shadow: 0 0 0 3px rgba(162, 155, 254, 0.2);
+            outline: none;
+        }
+
+        /* כפתורים */
+        .btn-custom {
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .btn-primary-custom {
+            background-image: var(--primary-gradient);
+            color: white;
+            border: none;
+        }
+        .btn-primary-custom:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* אנימציות */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in-up {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        /* צ'קבוקס מעוצב */
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+        }
+
+        /* תגיות אחריות */
+        .warranty-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+
+        /* מצב הדפסה */
+        @media print {
+            body { background: white; }
+            .kpi-card { box-shadow: none; border: 1px solid #ddd; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid p-4">
+    <header class="main-header fade-in-up d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-0"><i class="fa-solid fa-rocket text-primary me-2"></i> מנהל המעבר שלי</h2>
+            <p class="text-muted small mb-0 mt-1">נהל את התקציב, המשימות והרכישות בכיף</p>
+        </div>
+        
+        <div class="d-flex flex-column align-items-end" style="min-width: 250px;">
+            <div class="d-flex gap-2 no-print mb-2">
+                <button class="btn btn-outline-secondary btn-sm btn-custom" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> אקסל</button>
+                <button class="btn btn-outline-danger btn-sm btn-custom" onclick="window.print()"><i class="fa-solid fa-print"></i> הדפס</button>
+            </div>
+            <div class="w-100">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>מוכנות למעבר</span>
+                    <span id="progress-text">0%</span>
+                </div>
+                <div class="progress-container">
+                    <div id="main-progress-bar" class="progress-bar-custom"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="row g-3 mb-4 fade-in-up" style="animation-delay: 0.1s;">
+        <div class="col-md-2 col-6">
+            <div class="kpi-card p-3">
+                <h6 class="text-muted small text-uppercase">תקציב משוער</h6>
+                <div class="kpi-value" id="kpi-est-total">0 ₪</div>
+                <i class="fa-solid fa-wallet position-absolute bottom-0 start-0 m-3 text-light fa-2x" style="color: #eee !important;"></i>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="kpi-card p-3">
+                <h6 class="text-muted small text-uppercase">בוצע בפועל</h6>
+                <div class="kpi-value text-success" style="-webkit-text-fill-color: #00b894;" id="kpi-real-total">0 ₪</div>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="kpi-card p-3">
+                <h6 class="text-muted small text-uppercase">סטטוס תקציב</h6>
+                <div class="kpi-value" id="kpi-diff">0 ₪</div>
+                <small class="text-muted" id="kpi-diff-label">מאוזן</small>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="kpi-card p-3">
+                <h6 class="text-muted small text-uppercase">פריטים שנרכשו</h6>
+                <div class="kpi-value" style="-webkit-text-fill-color: #fd79a8;" id="kpi-count-purchased">0</div>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="kpi-card p-3" style="border: 2px solid #a29bfe;">
+                <label for="down-payment" class="text-muted small text-uppercase d-block mb-1">שילמתי מקדמות</label>
+                <input type="number" id="down-payment" class="form-control border-0 p-0 fs-4 fw-bold text-primary" value="0" oninput="updateKPIs()">
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="kpi-card p-3 bg-light">
+                <h6 class="text-muted small text-uppercase">נשאר לשלם</h6>
+                <div class="kpi-value text-dark" style="-webkit-text-fill-color: #2d3436;" id="kpi-balance">0 ₪</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-4 fade-in-up no-print" style="animation-delay: 0.2s;">
+        <div class="bg-white p-3 rounded-4 shadow-sm d-flex flex-wrap gap-3 align-items-center justify-content-between">
+            <div class="d-flex gap-3 flex-grow-1">
+                <div class="position-relative" style="min-width: 200px;">
+                    <i class="fa-solid fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input type="text" id="search-input" class="form-control rounded-pill ps-5" placeholder="חיפוש מהיר...">
+                </div>
+                <select id="filter-category" class="form-select rounded-pill" style="max-width: 150px;">
+                    <option value="">כל הקטגוריות</option>
+                    <option value="מוצרי חשמל">⚡ מוצרי חשמל</option>
+                    <option value="ריהוט">🛋️ ריהוט</option>
+                    <option value="מטבח">🍽️ מטבח</option>
+                    <option value="תאורה">💡 תאורה</option>
+                    <option value="אחר">📦 אחר</option>
+                </select>
+                <div class="form-check d-flex align-items-center">
+                    <input class="form-check-input custom-checkbox me-2" type="checkbox" id="filter-purchased-only">
+                    <label class="form-check-label" for="filter-purchased-only">רק מה שנקנה</label>
+                </div>
+            </div>
+            
+            <div>
+                <button class="btn btn-outline-danger btn-custom me-2" onclick="deleteSelected()"><i class="fa-solid fa-trash-can"></i> מחק</button>
+                <button class="btn btn-primary-custom btn-custom" onclick="addNewRow()"><i class="fa-solid fa-plus"></i> פריט חדש</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="table-container fade-in-up" style="animation-delay: 0.3s;">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0" id="items-table">
+                <thead>
+                    <tr>
+                        <th width="40" class="text-center rounded-start"><input type="checkbox" id="select-all" class="custom-checkbox"></th>
+                        <th onclick="sortBy('name')" style="cursor: pointer">מוצר <i class="fa-solid fa-sort text-muted ms-1"></i></th>
+                        <th width="140">קטגוריה</th>
+                        <th width="70">כמות</th>
+                        <th width="110">צפי (₪)</th>
+                        <th width="110">בפועל (₪)</th>
+                        <th width="140">תאריך קנייה</th>
+                        <th>חנות/ספק</th>
+                        <th width="80">אחריות</th>
+                        <th width="60" class="text-center">סטטוס</th>
+                        <th width="60" class="text-center">מסמך</th>
+                        <th width="50" class="rounded-end"></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    </tbody>
+            </table>
+        </div>
+        
+        <div id="empty-state" class="text-center py-5 d-none">
+            <i class="fa-solid fa-box-open fa-3x text-muted mb-3 opacity-25"></i>
+            <p class="text-muted">אין פריטים עדיין. לחץ על "פריט חדש" כדי להתחיל!</p>
+        </div>
+    </div>
+    
+    <nav aria-label="Page navigation" class="mt-4 no-print">
+        <ul class="pagination justify-content-center" id="pagination"></ul>
+    </nav>
+</div>
+
+<div class="toast-container position-fixed bottom-0 start-0 p-3">
+    <div id="liveToast" class="toast align-items-center text-white border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" style="border-radius: 12px;">
+        <div class="d-flex">
+            <div class="toast-body fs-6" id="toast-message">
+                הודעה
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="file-upload-input" style="display: none;" accept="image/*,.pdf">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // --- הגדרות DB ---
+    const DB_NAME = 'MoveManagerFunDB';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'attachments';
+
+    let appState = {
+        items: [],
+        filter: { search: '', category: '', purchasedOnly: false },
+        sort: { field: 'id', direction: 'desc' },
+        pagination: { currentPage: 1, itemsPerPage: 50 }
+    };
+
+    // --- שירות IndexedDB ---
+    const FileService = {
+        db: null,
+        async init() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
+                };
+                request.onsuccess = (e) => { this.db = e.target.result; resolve(); };
+                request.onerror = (e) => reject(e);
+            });
+        },
+        async saveFile(itemId, file) {
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction([STORE_NAME], 'readwrite');
+                tx.objectStore(STORE_NAME).put({ blob: file, name: file.name, type: file.type }, itemId);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject();
+            });
+        },
+        async getFile(itemId) {
+            return new Promise((resolve) => {
+                const tx = this.db.transaction([STORE_NAME], 'readonly');
+                const req = tx.objectStore(STORE_NAME).get(itemId);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => resolve(null);
+            });
+        },
+        async deleteFile(itemId) {
+            if(!this.db) return;
+            this.db.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete(itemId);
+        }
+    };
+
+    // --- לוגיקה ראשית ---
+    document.addEventListener('DOMContentLoaded', async () => {
+        await FileService.init();
+        loadData();
+        initEventListeners();
+        if (appState.items.length === 0) addDummyData();
+        render();
+    });
+
+    function loadData() {
+        const saved = localStorage.getItem('mm_items');
+        const savedPay = localStorage.getItem('mm_payment');
+        if (saved) appState.items = JSON.parse(saved);
+        if (savedPay) document.getElementById('down-payment').value = savedPay;
+    }
+
+    function saveData() {
+        localStorage.setItem('mm_items', JSON.stringify(appState.items));
+        localStorage.setItem('mm_payment', document.getElementById('down-payment').value);
+        updateKPIs();
+    }
+
+    function addDummyData() {
+        appState.items = [
+            { id: Date.now()+1, name: 'ספה לסלון', category: 'ריהוט', quantity: 1, estPrice: 4500, realPrice: 0, purchased: false, date: '', vendor: '', warranty: 12, warrantyEnd: '', hasFile: false },
+            { id: Date.now()+2, name: 'מקרר 4 דלתות', category: 'מוצרי חשמל', quantity: 1, estPrice: 6000, realPrice: 5800, purchased: true, date: '2023-10-15', vendor: 'חשמל פיקס', warranty: 36, warrantyEnd: '2026-10-15', hasFile: false }
+        ];
+        saveData();
+    }
+
+    function addNewRow() {
+        appState.items.unshift({
+            id: Date.now(), name: '', category: 'אחר', quantity: 1, estPrice: 0, realPrice: 0, 
+            purchased: false, date: '', vendor: '', warranty: 0, warrantyEnd: '', hasFile: false
+        });
+        saveData();
+        render();
+    }
+
+    function updateItem(id, field, value) {
+        const item = appState.items.find(i => i.id === id);
+        if (!item) return;
+
+        if (['quantity','estPrice','realPrice','warranty'].includes(field)) value = parseFloat(value) || 0;
+
+        if (field === 'purchased') {
+            if (value && !validatePurchase(item)) return; 
+            if (value && item.warranty > 0 && item.date) item.warrantyEnd = calcWarranty(item.date, item.warranty);
+        }
+
+        if ((field === 'date' || field === 'warranty') && item.purchased) {
+            if (field === 'date') item.date = value;
+            if (field === 'warranty') item.warranty = value;
+            item.warrantyEnd = calcWarranty(item.date, item.warranty);
+        } else {
+            item[field] = value;
+        }
+
+        saveData();
+        updateKPIs();
+        if (['purchased','category'].includes(field)) render();
+    }
+
+    function validatePurchase(item) {
+        if (item.realPrice <= 0 || !item.vendor || !item.date) {
+            showToast('חסרים פרטים: מחיר, ספק או תאריך', 'danger');
+            render();
+            return false;
+        }
+        return true;
+    }
+
+    function calcWarranty(dateStr, months) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        d.setMonth(d.getMonth() + months);
+        return d.toISOString().split('T')[0];
+    }
+
+    function deleteSelected() {
+        const checked = document.querySelectorAll('.row-select:checked');
+        if (!checked.length) return;
+        if (!confirm(`למחוק ${checked.length} פריטים?`)) return;
+        
+        const ids = Array.from(checked).map(c => +c.value);
+        ids.forEach(id => FileService.deleteFile(id));
+        appState.items = appState.items.filter(i => !ids.includes(i.id));
+        saveData();
+        render();
+        showToast('נמחק בהצלחה', 'success');
+    }
+
+    // --- קבצים ---
+    let uploadId = null;
+    function triggerUpload(id) { uploadId = id; document.getElementById('file-upload-input').click(); }
+    
+    document.getElementById('file-upload-input').addEventListener('change', async (e) => {
+        if (!e.target.files[0] || !uploadId) return;
+        await FileService.saveFile(uploadId, e.target.files[0]);
+        const item = appState.items.find(i => i.id === uploadId);
+        if(item) { item.hasFile = true; saveData(); render(); showToast('קובץ נשמר! 📎', 'success'); }
+        e.target.value = '';
+    });
+
+    async function downloadFile(id) {
+        const f = await FileService.getFile(id);
+        if (f) {
+            const url = URL.createObjectURL(f.blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = f.name; a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } else showToast('קובץ לא נמצא', 'danger');
+    }
+
+    // --- רינדור ---
+    function render() {
+        let data = appState.items;
+        
+        // סינון
+        const term = appState.filter.search.toLowerCase();
+        if (term) data = data.filter(i => (i.name||'').toLowerCase().includes(term) || (i.vendor||'').toLowerCase().includes(term));
+        if (appState.filter.category) data = data.filter(i => i.category === appState.filter.category);
+        if (appState.filter.purchasedOnly) data = data.filter(i => i.purchased);
+
+        // מיון
+        data.sort((a, b) => {
+            let va = a[appState.sort.field], vb = b[appState.sort.field];
+            if (typeof va === 'string') { va=va.toLowerCase(); vb=vb.toLowerCase(); }
+            return appState.sort.direction === 'asc' ? (va>vb?1:-1) : (va<vb?1:-1);
+        });
+
+        updateKPIs(data);
+
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+        
+        if(data.length === 0) {
+            document.getElementById('empty-state').classList.remove('d-none');
+        } else {
+            document.getElementById('empty-state').classList.add('d-none');
+        }
+
+        const start = (appState.pagination.currentPage - 1) * appState.pagination.itemsPerPage;
+        data.slice(start, start + appState.pagination.itemsPerPage).forEach(item => {
+            const warrantyStatus = getWarrantyStatus(item.warrantyEnd);
+            const tr = document.createElement('tr');
+            
+            tr.innerHTML = `
+                <td class="text-center"><input type="checkbox" class="row-select custom-checkbox" value="${item.id}"></td>
+                <td><input type="text" value="${item.name}" onchange="updateItem(${item.id}, 'name', this.value)" placeholder="שם פריט..." class="fw-bold text-primary"></td>
+                <td>
+                    <select onchange="updateItem(${item.id}, 'category', this.value)">
+                        ${['מוצרי חשמל','ריהוט','מטבח','תאורה','אחר'].map(o => `<option value="${o}" ${o===item.category?'selected':''}>${o}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="number" min="1" value="${item.quantity}" onchange="updateItem(${item.id}, 'quantity', this.value)" style="width:60px"></td>
+                <td><input type="number" value="${item.estPrice}" onchange="updateItem(${item.id}, 'estPrice', this.value)"></td>
+                <td><input type="number" value="${item.realPrice}" onchange="updateItem(${item.id}, 'realPrice', this.value)"></td>
+                <td><input type="date" value="${item.date}" onchange="updateItem(${item.id}, 'date', this.value)" style="font-size:0.85rem"></td>
+                <td><input type="text" value="${item.vendor}" onchange="updateItem(${item.id}, 'vendor', this.value)"></td>
+                <td><input type="number" value="${item.warranty}" onchange="updateItem(${item.id}, 'warranty', this.value)" style="width:50px"></td>
+                <td class="text-center">
+                    <input type="checkbox" class="custom-checkbox" ${item.purchased ? 'checked' : ''} onchange="updateItem(${item.id}, 'purchased', this.checked)">
+                </td>
+                <td class="text-center">
+                    ${item.hasFile 
+                        ? `<button class="btn btn-sm btn-success rounded-circle" onclick="downloadFile(${item.id})"><i class="fa-solid fa-check"></i></button>`
+                        : `<button class="btn btn-sm btn-light rounded-circle text-muted" onclick="triggerUpload(${item.id})"><i class="fa-solid fa-paperclip"></i></button>`
+                    }
+                </td>
+                <td class="text-center">
+                    ${item.warrantyEnd ? `<span class="warranty-dot" style="background:${warrantyStatus}" title="עד: ${item.warrantyEnd}"></span>` : ''}
+                    <i class="fa-solid fa-trash text-danger ms-2" style="cursor:pointer; opacity:0.5" onclick="if(confirm('למחוק?')) { FileService.deleteFile(${item.id}); appState.items=appState.items.filter(x=>x.id!==${item.id}); saveData(); render(); }"></i>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function getWarrantyStatus(dateStr) {
+        if(!dateStr) return 'transparent';
+        const days = (new Date(dateStr) - new Date()) / (1000*60*60*24);
+        return days < 0 ? '#ff7675' : (days < 30 ? '#fdcb6e' : '#00b894');
+    }
+
+    function updateKPIs(data = appState.items) {
+        const est = data.reduce((s, i) => s + (i.estPrice * i.quantity), 0);
+        const real = data.filter(i => i.purchased).reduce((s, i) => s + (i.realPrice * i.quantity), 0);
+        const diff = real - est;
+        
+        // Progress Bar Calculation
+        const totalItems = data.length;
+        const purchasedItems = data.filter(i => i.purchased).length;
+        const progress = totalItems === 0 ? 0 : Math.round((purchasedItems / totalItems) * 100);
+        
+        const bar = document.getElementById('main-progress-bar');
+        bar.style.width = `${progress}%`;
+        document.getElementById('progress-text').innerText = `${progress}%`;
+        
+        // Change color based on progress
+        if(progress === 100) bar.style.background = '#00b894';
+        else if(progress > 50) bar.style.background = 'linear-gradient(120deg, #f6d365 0%, #fda085 100%)';
+
+        document.getElementById('kpi-est-total').innerText = fmt(est);
+        document.getElementById('kpi-real-total').innerText = fmt(real);
+        
+        const diffEl = document.getElementById('kpi-diff');
+        const diffLbl = document.getElementById('kpi-diff-label');
+        diffEl.innerText = fmt(Math.abs(diff));
+        if (diff > 0) {
+            diffEl.style.color = '#d63031';
+            diffEl.innerText = '+' + diffEl.innerText;
+            diffLbl.innerText = 'חריגה מהתקציב';
+        } else if (diff < 0) {
+            diffEl.style.color = '#00b894';
+            diffLbl.innerText = 'חיסכון! איזה כיף';
+        } else {
+            diffEl.style.color = '#2d3436';
+            diffLbl.innerText = 'מאוזן';
+        }
+
+        document.getElementById('kpi-count-purchased').innerText = purchasedItems;
+        const pay = parseFloat(document.getElementById('down-payment').value) || 0;
+        document.getElementById('kpi-balance').innerText = fmt(real - pay);
+    }
+
+    const fmt = n => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(n);
+
+    function showToast(msg, type) {
+        const t = document.getElementById('liveToast');
+        const bg = type === 'danger' ? 'bg-danger' : 'bg-success';
+        t.className = `toast align-items-center text-white border-0 shadow-lg ${bg}`;
+        document.getElementById('toast-message').innerText = msg;
+        new bootstrap.Toast(t).show();
+    }
+
+    function initEventListeners() {
+        document.getElementById('search-input').addEventListener('input', (e) => { appState.filter.search = e.target.value; render(); });
+        document.getElementById('filter-category').addEventListener('change', (e) => { appState.filter.category = e.target.value; render(); });
+        document.getElementById('filter-purchased-only').addEventListener('change', (e) => { appState.filter.purchasedOnly = e.target.checked; render(); });
+        document.getElementById('select-all').addEventListener('change', (e) => document.querySelectorAll('.row-select').forEach(c => c.checked = e.target.checked));
+    }
+    
+    function sortBy(f) {
+        if(appState.sort.field === f) appState.sort.direction = appState.sort.direction==='asc'?'desc':'asc';
+        else { appState.sort.field = f; appState.sort.direction = 'asc'; }
+        render();
+    }
+    
+    function exportCSV() {
+        let csv = "\uFEFFשם,קטגוריה,מחיר משוער,מחיר אמיתי,ספק\n";
+        appState.items.forEach(i => csv += `"${i.name}","${i.category}",${i.estPrice},${i.realPrice},"${i.vendor}"\n`);
+        const a = document.createElement('a');
+        a.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        a.download = 'moving_list.csv';
+        a.click();
+    }
+
+    window.addNewRow = addNewRow; window.deleteSelected = deleteSelected; window.updateItem = updateItem;
+    window.updateKPIs = updateKPIs; window.triggerUpload = triggerUpload; window.downloadFile = downloadFile;
+    window.sortBy = sortBy; window.exportCSV = exportCSV;
+</script>
+</body>
+</html>
