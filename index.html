@@ -2,180 +2,170 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>המעבר שלי 🏠 - מחובר לענן</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>המעבר שלי 🏠 - נייד</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
-    
+
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --bg-color: #f0f2f5;
-        }
-        body {
-            background-color: var(--bg-color);
-            background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
-            background-attachment: fixed;
-            font-family: 'Rubik', sans-serif;
-            min-height: 100vh;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            backdrop-filter: blur(10px);
-        }
+        :root { --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%); --bg-color: #f0f2f5; }
+        body { background: var(--bg-color) linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%) fixed; font-family: 'Rubik', sans-serif; min-height: 100vh; padding-bottom: 80px; }
         
         /* מסך התחברות */
-        #auth-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .auth-box {
-            background: white; padding: 40px; border-radius: 20px;
-            width: 100%; max-width: 400px; text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
-        #app-content { display: none; } /* מוסתר עד להתחברות */
+        #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .auth-box { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        
+        /* כרטיסים כלליים */
+        .glass-card { background: rgba(255,255,255,0.98); border-radius: 16px; padding: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .kpi-card { background: white; border-radius: 12px; padding: 12px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; border: 1px solid #f0f0f0; }
+        .kpi-val { font-size: 1.2rem; font-weight: 700; color: #2d3436; margin-top: 5px; }
+        
+        .btn-custom { border-radius: 50px; background-image: var(--primary-gradient); color: white; border: none; padding: 10px 0; width: 100%; font-weight: 500; }
+        .nav-pills .nav-link { border-radius: 50px; margin: 0 5px; font-size: 0.9rem; }
+        .nav-pills .nav-link.active { background: var(--primary-gradient); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
 
-        .kpi-card { background: white; border-radius: 16px; padding: 15px; height: 100%; transition: transform 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .kpi-card:hover { transform: translateY(-5px); }
-        .kpi-value { font-size: 1.5rem; font-weight: bold; color: #333; }
-        .nav-pills .nav-link.active { background: var(--primary-gradient); }
-        .table-container { background: white; border-radius: 20px; padding: 20px; }
-        .btn-custom { border-radius: 50px; background-image: var(--primary-gradient); color: white; border: none; }
-        
-        /* Spinner */
-        .loader { border: 5px solid #f3f3f3; border-top: 5px solid #6c5ce7; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+        /* --- התאמה למובייל (Mobile Responsive Table) --- */
+        @media (max-width: 768px) {
+            .container-fluid { padding: 10px; }
+            
+            /* הופך את הטבלה לכרטיסים */
+            .table thead { display: none; }
+            .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+            .table tr {
+                background: white;
+                margin-bottom: 15px;
+                border-radius: 12px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+                border: 1px solid #eee;
+                padding: 10px;
+                position: relative;
+            }
+            .table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: left;
+                padding: 8px 0;
+                border-bottom: 1px solid #f8f9fa;
+            }
+            .table td:last-child { border-bottom: none; }
+            
+            /* תווית בצד ימין (data-label) */
+            .table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #636e72;
+                margin-left: 10px;
+            }
+            
+            /* התאמת שדות קלט בנייד */
+            .table input, .table select {
+                text-align: left;
+                background: #f1f2f6 !important;
+                border-radius: 8px;
+                padding: 5px 10px;
+                width: 60% !important; /* משאיר מקום לתווית */
+                font-size: 0.9rem;
+            }
+            
+            /* כפתור מחיקה צף */
+            .btn-delete-mobile {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background: #ffecec;
+                color: #ff7675;
+                border-radius: 50%;
+                width: 30px; height: 30px;
+                display: flex; align-items: center; justify-content: center;
+            }
+        }
+
+        /* ספינר */
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* התאמות ליומן */
-        .fc-toolbar-title { font-size: 1.2rem !important; }
-        .fc-button { font-size: 0.8rem !important; }
     </style>
 </head>
 <body>
 
-<div id="auth-overlay">
+<div id="auth-screen">
     <div class="auth-box">
-        <h2 class="mb-4 text-primary fw-bold"><i class="fa-solid fa-cloud"></i> המעבר שלי</h2>
-        <div id="auth-forms">
-            <div id="login-form">
-                <h5 class="mb-3">התחברות</h5>
-                <input type="email" id="login-email" class="form-control mb-2" placeholder="אימייל">
-                <input type="password" id="login-pass" class="form-control mb-3" placeholder="סיסמה">
-                <button class="btn btn-custom w-100 mb-3" onclick="loginUser()">הכנס</button>
-                <p class="small">אין לך חשבון? <a href="#" onclick="toggleAuth('register')">הרשם כאן</a></p>
-            </div>
-            
-            <div id="register-form" style="display: none;">
-                <h5 class="mb-3">הרשמה חדשה</h5>
-                <input type="email" id="reg-email" class="form-control mb-2" placeholder="אימייל">
-                <input type="password" id="reg-pass" class="form-control mb-3" placeholder="סיסמה (לפחות 6 תווים)">
-                <button class="btn btn-custom w-100 mb-3" onclick="registerUser()">צור חשבון</button>
-                <p class="small">יש לך חשבון? <a href="#" onclick="toggleAuth('login')">התחבר כאן</a></p>
-            </div>
-            
-            <div class="loader" id="auth-loader"></div>
-            <div id="auth-error" class="text-danger mt-2 small"></div>
+        <h2 class="mb-4 text-primary fw-bold">🏠 המעבר שלי</h2>
+        <div id="login-form">
+            <input type="email" id="email" class="form-control mb-3 p-3" placeholder="אימייל">
+            <input type="password" id="password" class="form-control mb-4 p-3" placeholder="סיסמה">
+            <button class="btn btn-custom" onclick="handleAuth('login')">התחבר</button>
+            <div class="mt-4 small">חדש כאן? <a href="#" onclick="toggleMode()" class="fw-bold">צור חשבון</a></div>
         </div>
+        <div id="register-form" style="display:none">
+            <input type="email" id="reg-email" class="form-control mb-3 p-3" placeholder="אימייל">
+            <input type="password" id="reg-pass" class="form-control mb-4 p-3" placeholder="סיסמה (6+ תווים)">
+            <button class="btn btn-custom" onclick="handleAuth('register')">הירשם</button>
+            <div class="mt-4 small">רשום כבר? <a href="#" onclick="toggleMode()" class="fw-bold">התחבר</a></div>
+        </div>
+        <div class="loader" id="auth-loader"></div>
+        <div id="auth-msg" class="text-danger mt-3 small fw-bold"></div>
     </div>
 </div>
 
-<div id="app-content" class="container-fluid p-4">
-    <header class="glass-card d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid" id="app-content" style="display:none">
+    
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-2 px-2">
         <div>
-            <h2 class="mb-0"><i class="fa-solid fa-truck-ramp-box text-primary me-2"></i> המעבר שלי</h2>
-            <p class="text-muted small mb-0 mt-1">מחובר כ: <span id="user-email-display" class="fw-bold"></span></p>
+            <h4 class="mb-0 fw-bold">המעבר שלי</h4>
+            <small class="text-muted" style="font-size: 0.75rem" id="user-display"></small>
         </div>
-        <div>
-            <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="logoutUser()">התנתק <i class="fa-solid fa-right-from-bracket"></i></button>
-        </div>
-    </header>
+        <button class="btn btn-light btn-sm rounded-circle shadow-sm" style="width:35px;height:35px" onclick="logout()"><i class="fa-solid fa-right-from-bracket text-danger"></i></button>
+    </div>
 
-    <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist">
-        <li class="nav-item"><button class="nav-link active rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#pills-inventory">ציוד ותקציב</button></li>
-        <li class="nav-item"><button class="nav-link rounded-pill px-4 me-2" data-bs-toggle="pill" data-bs-target="#pills-tasks">משימות ויומן</button></li>
+    <ul class="nav nav-pills nav-fill mb-3" id="pills-tab">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-items">📦 ציוד</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-tasks">📅 משימות</button></li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="pills-inventory">
-             <section class="row g-3 mb-4">
-                <div class="col-md-2 col-6"><div class="kpi-card"><div class="small text-muted">תקציב משוער</div><div class="kpi-value" id="kpi-est">0 ₪</div></div></div>
-                <div class="col-md-2 col-6"><div class="kpi-card"><div class="small text-muted">בפועל</div><div class="kpi-value text-success" id="kpi-real">0 ₪</div></div></div>
-                <div class="col-md-2 col-6"><div class="kpi-card"><div class="small text-muted">הפרש</div><div class="kpi-value" id="kpi-diff">0 ₪</div></div></div>
-                <div class="col-md-2 col-6"><div class="kpi-card"><div class="small text-muted">נרכשו</div><div class="kpi-value" id="kpi-count">0</div></div></div>
-                <div class="col-md-4 col-12">
-                    <div class="kpi-card">
-                         <div class="d-flex justify-content-between small text-muted"><span>התקדמות</span><span id="prog-text">0%</span></div>
-                         <div class="progress mt-1" style="height: 8px;"><div id="prog-bar" class="progress-bar bg-warning" style="width: 0%"></div></div>
-                         <div class="mt-2 d-flex justify-content-between align-items-center">
-                             <small>מקדמות:</small>
-                             <input type="number" id="down-payment" class="form-control border-0 p-0 text-end fw-bold text-primary" style="width: 80px; background:transparent" value="0" onchange="saveDataToCloud()">
-                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <div class="glass-card mb-3 d-flex gap-2 align-items-center">
-                <button class="btn btn-primary btn-sm rounded-pill" onclick="addNewRow()"><i class="fa-solid fa-plus"></i> הוסף פריט</button>
-                <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="deleteSelected()"><i class="fa-solid fa-trash"></i></button>
-                <div class="ms-auto" id="cloud-status"><i class="fa-solid fa-cloud-arrow-up text-muted"></i></div>
+        <div class="tab-pane fade show active" id="tab-items">
+            <div class="row g-2 mb-3">
+                <div class="col-6"><div class="kpi-card"><div class="small text-muted">תקציב</div><div class="kpi-val" id="kpi-est">0</div></div></div>
+                <div class="col-6"><div class="kpi-card"><div class="small text-muted">בפועל</div><div class="kpi-val text-success" id="kpi-real">0</div></div></div>
             </div>
 
-            <div class="table-container table-responsive">
-                <table class="table align-middle mb-0" id="items-table">
-                    <thead>
-                        <tr>
-                            <th width="30"><input type="checkbox" id="select-all"></th>
-                            <th>מוצר</th>
-                            <th width="100">קטגוריה</th>
-                            <th width="60">כמות</th>
-                            <th width="90">צפי</th>
-                            <th width="90">בפועל</th>
-                            <th>ספק</th>
-                            <th width="40" title="נרכש?">V</th>
-                            <th width="40"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body"></tbody>
-                </table>
+            <div class="glass-card p-2">
+                <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+                    <span class="fw-bold small text-muted"><i class="fa-solid fa-list"></i> רשימת פריטים</span>
+                    <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="addItem()">+ חדש</button>
+                </div>
+                
+                <div id="items-list">
+                    </div>
             </div>
         </div>
 
-        <div class="tab-pane fade" id="pills-tasks">
-            <div class="row g-4">
-                <div class="col-lg-8"><div class="glass-card"><div id="calendar"></div></div></div>
-                <div class="col-lg-4">
-                    <div class="glass-card h-100">
-                        <h5>משימות</h5>
-                        <div class="input-group mb-2">
-                            <input type="text" id="task-input" class="form-control" placeholder="משימה חדשה...">
-                            <input type="date" id="task-date" class="form-control" style="max-width: 130px;">
-                            <button class="btn btn-primary" onclick="addTask()">+</button>
-                        </div>
-                        <div id="task-list" style="max-height: 400px; overflow-y: auto;"></div>
-                    </div>
+        <div class="tab-pane fade" id="tab-tasks">
+            <div class="glass-card">
+                <div id="calendar" class="mb-4"></div>
+                
+                <h6 class="fw-bold mb-3 border-bottom pb-2">הוסף משימה</h6>
+                <div class="d-flex gap-2 mb-3">
+                    <input type="text" id="task-desc" class="form-control" placeholder="מה לעשות?">
+                    <input type="date" id="task-date" class="form-control" style="width: 130px;">
                 </div>
+                <button class="btn btn-custom mb-3" onclick="addTask()">הוסף משימה</button>
+
+                <div id="tasks-list" class="mt-3"></div>
             </div>
         </div>
     </div>
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
-        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, onSnapshot } 
-        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // --- הקונפיגורציה שלך מ-Firebase ---
     const firebaseConfig = {
       apiKey: "AIzaSyAWq3sTNwwyJyJQtCQQPAOYm4iYhYQ7hdg",
       authDomain: "move-manager-app.firebaseapp.com",
@@ -185,253 +175,174 @@
       appId: "1:285359561526:web:da34ac43a6e75606703197"
     };
 
-    // אתחול Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
+    
     let currentUser = null;
-    let appData = { items: [], tasks: [], payment: 0 };
-    let calendar = null;
+    let appData = { items: [], tasks: [] };
+    let calendar;
 
-    // --- לוגיקת משתמשים (Auth) ---
-
-    window.toggleAuth = (mode) => {
-        document.getElementById('login-form').style.display = mode === 'login' ? 'block' : 'none';
-        document.getElementById('register-form').style.display = mode === 'register' ? 'block' : 'none';
-        document.getElementById('auth-error').innerText = '';
-    };
-
-    window.registerUser = async () => {
-        const email = document.getElementById('reg-email').value;
-        const pass = document.getElementById('reg-pass').value;
-        toggleLoader(true);
-        try {
-            await createUserWithEmailAndPassword(auth, email, pass);
-            // הצלחה - המשתמש מחובר אוטומטית
-        } catch (error) {
-            let msg = "שגיאה בהרשמה";
-            if(error.code === 'auth/email-already-in-use') msg = "המייל הזה כבר קיים במערכת";
-            if(error.code === 'auth/weak-password') msg = "הסיסמה חלשה מדי (מינימום 6 תווים)";
-            document.getElementById('auth-error').innerText = msg;
-            toggleLoader(false);
-        }
-    };
-
-    window.loginUser = async () => {
-        const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-pass').value;
-        toggleLoader(true);
-        try {
-            await signInWithEmailAndPassword(auth, email, pass);
-        } catch (error) {
-            document.getElementById('auth-error').innerText = "פרטים שגויים או בעיית התחברות";
-            toggleLoader(false);
-        }
-    };
-
-    window.logoutUser = () => signOut(auth);
-
-    function toggleLoader(show) {
-        document.getElementById('auth-loader').style.display = show ? 'block' : 'none';
+    // --- Auth ---
+    window.toggleMode = () => {
+        const login = document.getElementById('login-form');
+        const reg = document.getElementById('register-form');
+        login.style.display = login.style.display === 'none' ? 'block' : 'none';
+        reg.style.display = reg.style.display === 'none' ? 'block' : 'none';
     }
 
-    // --- האזנה למצב התחברות ---
+    window.handleAuth = async (mode) => {
+        const email = document.getElementById(mode === 'login' ? 'email' : 'reg-email').value;
+        const pass = document.getElementById(mode === 'login' ? 'password' : 'reg-pass').value;
+        const msg = document.getElementById('auth-msg');
+        const loader = document.getElementById('auth-loader');
+        
+        msg.innerText = ''; loader.style.display = 'block';
+
+        try {
+            if (mode === 'login') await signInWithEmailAndPassword(auth, email, pass);
+            else await createUserWithEmailAndPassword(auth, email, pass);
+        } catch (error) {
+            msg.innerText = "שגיאה: " + error.message;
+            loader.style.display = 'none';
+        }
+    };
+
+    window.logout = () => signOut(auth);
+
     onAuthStateChanged(auth, (user) => {
-        toggleLoader(false);
+        document.getElementById('auth-loader').style.display = 'none';
         if (user) {
             currentUser = user;
-            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-content').style.display = 'block';
-            document.getElementById('user-email-display').innerText = user.email;
-            initApp(); // טען נתונים
+            document.getElementById('user-display').innerText = user.email;
+            initData();
         } else {
-            currentUser = null;
-            document.getElementById('auth-overlay').style.display = 'flex';
+            document.getElementById('auth-screen').style.display = 'flex';
             document.getElementById('app-content').style.display = 'none';
         }
     });
 
-    // --- סנכרון נתונים (Firestore) ---
-
-    function initApp() {
-        // האזנה בזמן אמת לשינויים ב-DB עבור המשתמש הזה בלבד
-        const userDocRef = doc(db, "users", currentUser.uid);
-        
-        onSnapshot(userDocRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                appData = data;
+    // --- Data ---
+    function initData() {
+        onSnapshot(doc(db, "users", currentUser.uid), (snap) => {
+            if (snap.exists()) {
+                appData = snap.data();
                 if(!appData.items) appData.items = [];
                 if(!appData.tasks) appData.tasks = [];
-                document.getElementById('down-payment').value = appData.payment || 0;
-            } else {
-                // משתמש חדש - ניצור לו מסמך ריק
-                appData = { items: [], tasks: [], payment: 0 };
-                saveDataToCloud();
-            }
+            } else { saveData(); }
             renderAll();
         });
-
         initCalendar();
     }
 
-    window.saveDataToCloud = async () => {
+    async function saveData() {
         if (!currentUser) return;
-        document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-spinner fa-spin text-primary"></i>';
-        
-        appData.payment = document.getElementById('down-payment').value;
-        
-        try {
-            await setDoc(doc(db, "users", currentUser.uid), appData);
-            setTimeout(() => {
-                document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-check text-success"></i>';
-            }, 500);
-        } catch (e) {
-            console.error("Error saving", e);
-            document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-triangle-exclamation text-danger"></i>';
+        await setDoc(doc(db, "users", currentUser.uid), appData);
+    }
+
+    // --- Logic ---
+    window.addItem = () => {
+        appData.items.unshift({ id: Date.now(), name: '', category: 'אחר', qty: 1, est: 0, real: 0, purchased: false });
+        saveData();
+    };
+
+    window.updateItem = (id, field, val) => {
+        const i = appData.items.find(x => x.id === id);
+        if (i) {
+            i[field] = field === 'purchased' ? val : (['qty','est','real'].includes(field) ? Number(val) : val);
+            saveData();
         }
     };
 
-    // --- לוגיקת האפליקציה (פריטים) ---
-
-    window.addNewRow = () => {
-        appData.items.unshift({ id: Date.now(), name: '', category: 'אחר', qty: 1, est: 0, real: 0, vendor: '', purchased: false });
-        saveDataToCloud();
+    window.deleteItem = (id) => {
+        if(confirm('למחוק?')) { appData.items = appData.items.filter(x => x.id !== id); saveData(); }
     };
-
-    window.updateItem = (id, field, value) => {
-        const item = appData.items.find(i => i.id === id);
-        if (item) {
-            if(['qty','est','real'].includes(field)) value = parseFloat(value) || 0;
-            if(field === 'purchased') value = !!value; 
-            item[field] = value;
-            saveDataToCloud(); 
-        }
-    };
-
-    window.deleteSelected = () => {
-        const checked = document.querySelectorAll('.row-chk:checked');
-        if (checked.length && confirm('למחוק?')) {
-            const ids = Array.from(checked).map(c => +c.value);
-            appData.items = appData.items.filter(i => !ids.includes(i.id));
-            saveDataToCloud();
-        }
-    };
-
-    function renderAll() {
-        renderTable();
-        renderKPIs();
-        renderTasks();
-        if(calendar) {
-            calendar.removeAllEvents();
-            // מוסיף משימות ליומן
-            calendar.addEventSource(appData.tasks.filter(t=>t.date).map(t => ({ 
-                title: t.title, 
-                start: t.date, 
-                allDay: true,
-                color: t.done ? '#ccc' : '#667eea'
-            })));
-        }
-    }
-
-    function renderTable() {
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = '';
-        appData.items.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input type="checkbox" class="row-chk form-check-input" value="${item.id}"></td>
-                <td><input type="text" class="form-control form-control-sm border-0 bg-transparent fw-bold" value="${item.name}" onchange="updateItem(${item.id}, 'name', this.value)" placeholder="שם..."></td>
-                <td><select class="form-select form-select-sm border-0 bg-transparent" onchange="updateItem(${item.id}, 'category', this.value)">
-                    ${['מוצרי חשמל','ריהוט','מטבח','אחר'].map(o => `<option ${o===item.category?'selected':''}>${o}</option>`).join('')}
-                </select></td>
-                <td><input type="number" class="form-control form-control-sm border-0 bg-transparent" value="${item.qty}" onchange="updateItem(${item.id}, 'qty', this.value)"></td>
-                <td><input type="number" class="form-control form-control-sm border-0 bg-transparent" value="${item.est}" onchange="updateItem(${item.id}, 'est', this.value)"></td>
-                <td><input type="number" class="form-control form-control-sm border-0 bg-transparent" value="${item.real}" onchange="updateItem(${item.id}, 'real', this.value)"></td>
-                <td><input type="text" class="form-control form-control-sm border-0 bg-transparent" value="${item.vendor||''}" onchange="updateItem(${item.id}, 'vendor', this.value)"></td>
-                <td><input type="checkbox" class="form-check-input" ${item.purchased?'checked':''} onchange="updateItem(${item.id}, 'purchased', this.checked)"></td>
-                <td><i class="fa-solid fa-trash text-danger" style="cursor:pointer" onclick="deleteSingle(${item.id})"></i></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    window.deleteSingle = (id) => {
-        if(confirm('למחוק?')) {
-            appData.items = appData.items.filter(i => i.id !== id);
-            saveDataToCloud();
-        }
-    }
-
-    function renderKPIs() {
-        const est = appData.items.reduce((s, i) => s + (i.est * i.qty), 0);
-        const real = appData.items.filter(i => i.purchased).reduce((s, i) => s + (i.real * i.qty), 0);
-        document.getElementById('kpi-est').innerText = est.toLocaleString() + ' ₪';
-        document.getElementById('kpi-real').innerText = real.toLocaleString() + ' ₪';
-        document.getElementById('kpi-diff').innerText = (real - est).toLocaleString() + ' ₪';
-        document.getElementById('kpi-count').innerText = appData.items.filter(i => i.purchased).length;
-        
-        const percent = appData.items.length ? Math.round((appData.items.filter(i => i.purchased).length / appData.items.length) * 100) : 0;
-        document.getElementById('prog-bar').style.width = percent + '%';
-        document.getElementById('prog-text').innerText = percent + '%';
-    }
-
-    // --- משימות ---
 
     window.addTask = () => {
-        const title = document.getElementById('task-input').value;
+        const title = document.getElementById('task-desc').value;
         const date = document.getElementById('task-date').value;
-        if(!title) return;
-        appData.tasks.push({ id: Date.now(), title, date, done: false });
-        document.getElementById('task-input').value = '';
-        saveDataToCloud();
+        if(title) {
+            appData.tasks.push({ id: Date.now(), title, date, done: false });
+            document.getElementById('task-desc').value = '';
+            saveData();
+        }
     };
+    
+    window.deleteTask = (id) => { appData.tasks = appData.tasks.filter(t => t.id !== id); saveData(); };
+    window.toggleTask = (id) => { const t = appData.tasks.find(x => x.id === id); if(t) { t.done = !t.done; saveData(); } };
 
-    window.toggleTask = (id) => {
-        const task = appData.tasks.find(t => t.id === id);
-        if(task) { task.done = !task.done; saveDataToCloud(); }
-    };
+    // --- Render ---
+    function renderAll() {
+        // רשימת ציוד - טבלה רספונסיבית
+        const list = document.getElementById('items-list');
+        if(appData.items.length === 0) {
+            list.innerHTML = '<div class="text-center text-muted py-5">אין פריטים עדיין</div>';
+        } else {
+            list.innerHTML = `
+            <table class="table table-borderless m-0">
+                <thead class="text-muted small bg-light rounded">
+                    <tr><th>שם</th><th width="80">קטגוריה</th><th width="60">כמות</th><th width="80">צפי</th><th width="80">בפועל</th><th width="50">נרכש</th><th></th></tr>
+                </thead>
+                <tbody>
+                    ${appData.items.map(i => `
+                    <tr>
+                        <td data-label="שם מוצר"><input class="form-control form-control-sm border-0 bg-light" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="הכנס שם..."></td>
+                        <td data-label="קטגוריה"><select class="form-select form-select-sm border-0 bg-light" onchange="updateItem(${i.id},'category',this.value)">${['ריהוט','חשמל','מטבח','אחר'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select></td>
+                        <td data-label="כמות"><input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)"></td>
+                        <td data-label="מחיר משוער"><input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)"></td>
+                        <td data-label="מחיר בפועל"><input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.real}" onchange="updateItem(${i.id},'real',this.value)"></td>
+                        <td data-label="האם נרכש?"><div class="form-check d-flex justify-content-end justify-content-md-start"><input type="checkbox" class="form-check-input" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></div></td>
+                        <td class="text-end"><i class="fa-solid fa-trash text-danger btn-delete-mobile" style="cursor:pointer" onclick="deleteItem(${i.id})"></i></td>
+                    </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+        }
 
-    window.deleteTask = (id) => {
-        appData.tasks = appData.tasks.filter(t => t.id !== id);
-        saveDataToCloud();
-    };
+        // KPIs
+        const est = appData.items.reduce((s,i) => s + (i.est * i.qty), 0);
+        const real = appData.items.filter(i=>i.purchased).reduce((s,i) => s + (i.real * i.qty), 0);
+        document.getElementById('kpi-est').innerText = est.toLocaleString();
+        document.getElementById('kpi-real').innerText = real.toLocaleString();
 
-    function renderTasks() {
-        const list = document.getElementById('task-list');
-        list.innerHTML = '';
-        appData.tasks.forEach(t => {
-            const div = document.createElement('div');
-            div.className = "d-flex justify-content-between align-items-center p-2 border-bottom";
-            div.innerHTML = `
-                <div>
-                    <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${t.id})">
-                    <span class="${t.done ? 'text-decoration-line-through text-muted' : ''}">${t.title}</span>
-                    <small class="d-block text-muted" style="font-size:0.75rem">${t.date || ''}</small>
+        // Tasks
+        document.getElementById('tasks-list').innerHTML = appData.tasks.map(t => `
+            <div class="glass-card p-2 mb-2 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <input type="checkbox" class="form-check-input" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
+                    <div>
+                        <div class="${t.done?'text-decoration-line-through text-muted':''} fw-bold">${t.title}</div>
+                        <div class="small text-muted">${t.date||''}</div>
+                    </div>
                 </div>
-                <button class="btn btn-sm text-danger" onclick="deleteTask(${t.id})">x</button>
-            `;
-            list.appendChild(div);
-        });
+                <button class="btn btn-sm text-danger" onclick="deleteTask(${t.id})"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        `).join('');
+
+        if(calendar) {
+            calendar.removeAllEvents();
+            calendar.addEventSource(appData.tasks.filter(t=>t.date).map(t => ({ title: t.title, start: t.date, color: t.done?'#ccc':'#667eea' })));
+        }
     }
 
     function initCalendar() {
-        if(!calendar) {
-            calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-                initialView: 'dayGridMonth',
-                height: 'auto',
-                direction: 'rtl',
-                headerToolbar: { left: 'prev,next', center: 'title', right: '' }
-            });
-            calendar.render();
-        }
+        if(calendar) return;
+        const isMobile = window.innerWidth < 768;
+        calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: isMobile ? 'listMonth' : 'dayGridMonth', // תצוגת רשימה בנייד!
+            headerToolbar: { left: 'prev,next', center: 'title', right: '' },
+            height: 'auto',
+            direction: 'rtl',
+            locale: 'he',
+            buttonText: { list: 'רשימה' }
+        });
+        calendar.render();
     }
-
-    const tabEl = document.querySelector('button[data-bs-target="#pills-tasks"]');
-    if(tabEl) {
-        tabEl.addEventListener('shown.bs.tab', () => calendar && calendar.render());
-    }
+    
+    // רענון יומן בטאב
+    document.querySelector('button[data-bs-target="#tab-tasks"]').addEventListener('shown.bs.tab', () => calendar && calendar.render());
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
