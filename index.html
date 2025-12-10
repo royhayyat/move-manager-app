@@ -19,77 +19,95 @@
         :root { --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%); --bg-color: #f0f2f5; }
         body { background: var(--bg-color) linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%) fixed; font-family: 'Rubik', sans-serif; min-height: 100vh; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
         
-        /* מסך התחברות */
+        /* Login Screen */
         #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .auth-box { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
         
-        /* כרטיסים ועיצוב */
+        /* Cards & Buttons */
         .glass-card { background: rgba(255,255,255,0.98); border-radius: 16px; padding: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 15px; }
         .kpi-card { background: white; border-radius: 12px; padding: 12px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; border: 1px solid #f0f0f0; }
         .kpi-val { font-size: 1.2rem; font-weight: 700; color: #2d3436; margin-top: 5px; }
-        
         .btn-custom { border-radius: 50px; background-image: var(--primary-gradient); color: white; border: none; padding: 10px 0; width: 100%; font-weight: 500; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
-        .btn-custom:active { transform: scale(0.98); }
-        
         .nav-pills .nav-link { border-radius: 50px; margin: 0 5px; font-size: 0.9rem; transition: all 0.3s; }
         .nav-pills .nav-link.active { background: var(--primary-gradient); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
 
-        /* --- התאמה למובייל (Mobile Responsive Table) --- */
+        /* --- Mobile Table Fixes --- */
         @media (max-width: 768px) {
-            .container-fluid { padding: 10px; }
+            .container-fluid { padding: 12px; }
             
-            /* הופך את הטבלה לכרטיסים */
+            /* Hide headers */
             .table thead { display: none; }
             .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+            
+            /* Card Style for Rows */
             .table tr {
                 background: white;
-                margin-bottom: 15px;
-                border-radius: 12px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-                border: 1px solid #eee;
-                padding: 10px;
-                position: relative;
+                margin-bottom: 20px; /* More space between cards */
+                border-radius: 16px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+                border: 1px solid #f0f0f0;
+                padding: 15px 15px 50px 15px; /* Added bottom padding for the delete button */
+                position: relative; /* For absolute positioning of delete button */
             }
+            
             .table td {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 text-align: left;
                 padding: 8px 0;
-                border-bottom: 1px solid #f8f9fa;
+                border-bottom: 1px solid #f9f9f9;
             }
-            .table td:last-child { border-bottom: none; }
+            .table td:last-child { border-bottom: none; display: block; padding: 0; }
             
+            /* Labels */
             .table td::before {
                 content: attr(data-label);
                 font-weight: 600;
-                font-size: 0.85rem;
-                color: #636e72;
-                margin-left: 10px;
-            }
-            
-            .table input, .table select {
-                text-align: left;
-                background: #f1f2f6 !important;
-                border-radius: 8px;
-                padding: 5px 10px;
-                width: 60% !important;
                 font-size: 0.9rem;
+                color: #636e72;
+                margin-left: 15px;
+                min-width: 80px; /* Ensure label has space */
             }
             
-            .btn-delete-mobile {
-                position: absolute; top: 10px; left: 10px;
-                background: #ffecec; color: #ff7675;
-                border-radius: 50%; width: 30px; height: 30px;
-                display: flex; align-items: center; justify-content: center;
+            /* Input fields */
+            .table input, .table select {
+                text-align: right; /* Text aligns right (Hebrew friendly) */
+                background: #f8f9fa !important;
+                border-radius: 8px;
+                padding: 8px 12px;
+                width: 100% !important; 
+                flex: 1; /* Take remaining space */
+                font-size: 0.95rem;
+                border: 1px solid #eee !important;
             }
+            .table input:focus { background: white !important; border-color: #667eea !important; }
+
+            /* Checkbox special styling */
+            .table td[data-label="האם נרכש?"] { justify-content: space-between; }
+            .table td[data-label="האם נרכש?"] .form-check { margin: 0; }
+
+            /* Delete Button - Moved to Bottom Left */
+            .btn-delete-mobile {
+                position: absolute;
+                bottom: 10px; /* Bottom instead of top */
+                left: 15px;   /* Left corner */
+                background: #ffecec;
+                color: #ff7675;
+                border-radius: 12px;
+                width: auto; 
+                height: 35px;
+                padding: 0 15px;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 0.9rem;
+                font-weight: 500;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            }
+            .btn-delete-mobile::after { content: " מחיקה"; margin-right: 5px; } /* Add text label */
         }
 
-        /* ספינר */
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* יומן */
         .fc-toolbar-title { font-size: 1.1rem !important; }
         .fc-button { font-size: 0.8rem !important; padding: 4px 8px !important; }
     </style>
@@ -117,12 +135,8 @@
 </div>
 
 <div class="container-fluid" id="app-content" style="display:none">
-    
     <div class="d-flex justify-content-between align-items-center mb-3 mt-3 px-2">
-        <div>
-            <h4 class="mb-0 fw-bold">המעבר שלי</h4>
-            <small class="text-muted" style="font-size: 0.75rem" id="user-display"></small>
-        </div>
+        <div><h4 class="mb-0 fw-bold">המעבר שלי</h4><small class="text-muted" style="font-size: 0.75rem" id="user-display"></small></div>
         <button class="btn btn-light btn-sm rounded-circle shadow-sm" style="width:35px;height:35px" onclick="logout()"><i class="fa-solid fa-right-from-bracket text-danger"></i></button>
     </div>
 
@@ -143,23 +157,19 @@
                     <span class="fw-bold small text-muted"><i class="fa-solid fa-list"></i> רשימת פריטים</span>
                     <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" onclick="addItem()">+ חדש</button>
                 </div>
-                
-                <div id="items-list">
-                    </div>
+                <div id="items-list"></div>
             </div>
         </div>
 
         <div class="tab-pane fade" id="tab-tasks">
             <div class="glass-card">
                 <div id="calendar" class="mb-4"></div>
-                
                 <h6 class="fw-bold mb-3 border-bottom pb-2">הוסף משימה</h6>
                 <div class="d-flex gap-2 mb-3">
                     <input type="text" id="task-desc" class="form-control" placeholder="מה לעשות?">
                     <input type="date" id="task-date" class="form-control" style="width: 130px;">
                 </div>
                 <button class="btn btn-custom mb-3" onclick="addTask()">הוסף משימה</button>
-
                 <div id="tasks-list" class="mt-3"></div>
             </div>
         </div>
@@ -171,7 +181,6 @@
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // המפתחות שלך - כבר בפנים
     const firebaseConfig = {
       apiKey: "AIzaSyAWq3sTNwwyJyJQtCQQPAOYm4iYhYQ7hdg",
       authDomain: "move-manager-app.firebaseapp.com",
@@ -184,27 +193,23 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    
     let currentUser = null;
     let appData = { items: [], tasks: [] };
     let calendar;
 
-    // --- Auth ---
+    // Auth
     window.toggleMode = () => {
         const login = document.getElementById('login-form');
         const reg = document.getElementById('register-form');
         login.style.display = login.style.display === 'none' ? 'block' : 'none';
         reg.style.display = reg.style.display === 'none' ? 'block' : 'none';
     }
-
     window.handleAuth = async (mode) => {
         const email = document.getElementById(mode === 'login' ? 'email' : 'reg-email').value;
         const pass = document.getElementById(mode === 'login' ? 'password' : 'reg-pass').value;
         const msg = document.getElementById('auth-msg');
         const loader = document.getElementById('auth-loader');
-        
         msg.innerText = ''; loader.style.display = 'block';
-
         try {
             if (mode === 'login') await signInWithEmailAndPassword(auth, email, pass);
             else await createUserWithEmailAndPassword(auth, email, pass);
@@ -213,9 +218,7 @@
             loader.style.display = 'none';
         }
     };
-
     window.logout = () => signOut(auth);
-
     onAuthStateChanged(auth, (user) => {
         document.getElementById('auth-loader').style.display = 'none';
         if (user) {
@@ -230,7 +233,7 @@
         }
     });
 
-    // --- Data ---
+    // Data
     function initData() {
         onSnapshot(doc(db, "users", currentUser.uid), (snap) => {
             if (snap.exists()) {
@@ -242,18 +245,13 @@
         });
         initCalendar();
     }
-
     async function saveData() {
         if (!currentUser) return;
         await setDoc(doc(db, "users", currentUser.uid), appData);
     }
 
-    // --- Logic ---
-    window.addItem = () => {
-        appData.items.unshift({ id: Date.now(), name: '', category: 'אחר', qty: 1, est: 0, real: 0, purchased: false });
-        saveData();
-    };
-
+    // Actions
+    window.addItem = () => { appData.items.unshift({ id: Date.now(), name: '', category: 'אחר', qty: 1, est: 0, real: 0, purchased: false }); saveData(); };
     window.updateItem = (id, field, val) => {
         const i = appData.items.find(x => x.id === id);
         if (i) {
@@ -261,25 +259,16 @@
             saveData();
         }
     };
-
-    window.deleteItem = (id) => {
-        if(confirm('למחוק?')) { appData.items = appData.items.filter(x => x.id !== id); saveData(); }
-    };
-
+    window.deleteItem = (id) => { if(confirm('למחוק?')) { appData.items = appData.items.filter(x => x.id !== id); saveData(); } };
     window.addTask = () => {
         const title = document.getElementById('task-desc').value;
         const date = document.getElementById('task-date').value;
-        if(title) {
-            appData.tasks.push({ id: Date.now(), title, date, done: false });
-            document.getElementById('task-desc').value = '';
-            saveData();
-        }
+        if(title) { appData.tasks.push({ id: Date.now(), title, date, done: false }); document.getElementById('task-desc').value = ''; saveData(); }
     };
-    
     window.deleteTask = (id) => { appData.tasks = appData.tasks.filter(t => t.id !== id); saveData(); };
     window.toggleTask = (id) => { const t = appData.tasks.find(x => x.id === id); if(t) { t.done = !t.done; saveData(); } };
 
-    // --- Render ---
+    // Render
     function renderAll() {
         const list = document.getElementById('items-list');
         if(appData.items.length === 0) {
@@ -299,7 +288,10 @@
                         <td data-label="מחיר משוער"><input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)"></td>
                         <td data-label="מחיר בפועל"><input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.real}" onchange="updateItem(${i.id},'real',this.value)"></td>
                         <td data-label="האם נרכש?"><div class="form-check d-flex justify-content-end justify-content-md-start"><input type="checkbox" class="form-check-input" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></div></td>
-                        <td class="text-end"><i class="fa-solid fa-trash text-danger btn-delete-mobile" style="cursor:pointer" onclick="deleteItem(${i.id})"></i></td>
+                        <td class="text-end" style="border:none !important">
+                            <button class="btn btn-delete-mobile d-md-none" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
+                            <i class="fa-solid fa-trash text-danger d-none d-md-inline" style="cursor:pointer" onclick="deleteItem(${i.id})"></i>
+                        </td>
                     </tr>
                     `).join('')}
                 </tbody>
@@ -341,7 +333,6 @@
         });
         calendar.render();
     }
-    
     document.querySelector('button[data-bs-target="#tab-tasks"]').addEventListener('shown.bs.tab', () => calendar && calendar.render());
 
 </script>
