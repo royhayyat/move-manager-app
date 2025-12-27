@@ -35,19 +35,30 @@
         .sub-items-container { background: #f8f9fa; border-radius: 10px; padding: 10px; margin-top: 10px; border: 1px dashed #ced4da; }
         .sub-row input { background: #fff !important; border: 1px solid #ddd !important; font-size: 0.85rem !important; }
 
-        /* --- Table Fixes --- */
-        .table { table-layout: fixed; width: 100%; }
-        .table th { font-size: 0.85rem; color: #6c757d; font-weight: 600; vertical-align: middle; }
+        /* --- FORCE TABLE LAYOUT (The Fix) --- */
+        .fixed-table {
+            table-layout: fixed !important;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 5px; /* Spacing between rows */
+        }
+        
+        /* Fix inputs to not overflow cells */
         .table input, .table select { 
-            width: 100%; 
-            min-width: 0; /* Prevents overflow */
+            width: 100% !important; 
+            box-sizing: border-box;
             font-size: 0.9rem; 
-            padding: 6px 8px;
+            padding: 6px 4px;
             border-radius: 6px;
             border: 1px solid #dee2e6;
             background-color: #fcfcfc;
+            height: 34px; /* Fixed height */
         }
-        .table input:focus, .table select:focus { background-color: #fff; border-color: #667eea; outline: none; box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2); }
+        
+        .table td {
+            vertical-align: middle;
+            padding: 4px !important;
+        }
 
         /* --- Mobile Responsive Fixes --- */
         @media (max-width: 768px) {
@@ -74,7 +85,7 @@
         }
 
         @media (min-width: 769px) {
-            .item-row-card { display: table-row; }
+            .item-row-card { display: table-row; background: white; }
             .mobile-cell { display: table-cell; vertical-align: middle; padding: 8px 4px; border-bottom: 1px solid #f0f0f0; }
             .mobile-cell::before { display: none; }
             .btn-action-group { display: none; }
@@ -313,19 +324,29 @@
         if(filteredItems.length === 0) {
             list.innerHTML = '<div class="text-center text-muted py-5">אין פריטים להצגה</div>';
         } else {
-            // NOTE: Explicit widths added to TH for Desktop layout fixes
+            // Using <col> group to strictly enforce width percentage
             list.innerHTML = `
-            <table class="table m-0">
+            <table class="table fixed-table m-0">
+                <colgroup>
+                    <col style="width: 5%;">
+                    <col style="width: 25%;">
+                    <col style="width: 16%;">
+                    <col style="width: 10%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 8%;">
+                    <col style="width: 6%;">
+                </colgroup>
                 <thead class="text-muted small bg-light rounded table-main-head">
                     <tr>
-                        <th width="4%"></th>
-                        <th width="32%">שם מוצר</th>
-                        <th width="15%">קטגוריה</th>
-                        <th width="10%">כמות</th>
-                        <th width="12%">צפי</th>
-                        <th width="12%">בפועל</th>
-                        <th width="8%" class="text-center">נרכש</th>
-                        <th width="7%"></th>
+                        <th></th>
+                        <th>שם מוצר</th>
+                        <th>קטגוריה</th>
+                        <th>כמות</th>
+                        <th>צפי</th>
+                        <th>בפועל</th>
+                        <th class="text-center">נרכש</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -402,17 +423,17 @@
         let totalReal = 0;
 
         appData.items.forEach(i => {
+            // Est
             totalEst += (i.est * i.qty);
             
-            // Logic Change: Sum 'Real' regardless of 'Purchased' status
-            // If it has sub-items, sum them. If not, use the main real value.
+            // Real Logic: Sum it ALL, ignore 'purchased' status for the calculator at the top
             let itemRealCost = 0;
             if (i.subItems && i.subItems.length > 0) {
                 itemRealCost = i.subItems.reduce((acc, sub) => acc + (sub.cost * sub.qty), 0);
             } else {
                 itemRealCost = i.real * i.qty;
             }
-            totalReal += itemRealCost; 
+            totalReal += itemRealCost;
         });
 
         document.getElementById('kpi-est').innerText = totalEst.toLocaleString();
