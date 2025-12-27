@@ -31,85 +31,56 @@
         .nav-pills .nav-link { border-radius: 50px; margin: 0 5px; font-size: 0.9rem; transition: all 0.3s; }
         .nav-pills .nav-link.active { background: var(--primary-gradient); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
 
+        /* Sub Items Table */
+        .sub-items-container { background: #f8f9fa; border-radius: 10px; padding: 10px; margin-top: 10px; border: 1px dashed #ced4da; }
+        .sub-row input { background: #fff !important; border: 1px solid #ddd !important; font-size: 0.85rem !important; }
+
         /* --- Mobile Table Fixes --- */
         @media (max-width: 768px) {
             .container-fluid { padding: 12px; }
-            
-            /* Hide headers */
-            .table thead { display: none; }
-            .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+            .table-main-head { display: none; } /* Hide main headers only */
             
             /* Card Style for Rows */
-            .table tr {
+            .item-row-card {
                 background: white;
-                margin-bottom: 20px; /* More space between cards */
+                margin-bottom: 20px;
                 border-radius: 16px;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.03);
                 border: 1px solid #f0f0f0;
-                padding: 15px 15px 50px 15px; /* Added bottom padding for the delete button */
-                position: relative; /* For absolute positioning of delete button */
-            }
-            
-            .table td {
+                padding: 15px;
                 display: flex;
-                justify-content: space-between;
-                align-items: center;
-                text-align: left;
-                padding: 8px 0;
-                border-bottom: 1px solid #f9f9f9;
-            }
-            .table td:last-child { border-bottom: none; display: block; padding: 0; }
-            
-            /* Labels */
-            .table td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                font-size: 0.9rem;
-                color: #636e72;
-                margin-left: 15px;
-                min-width: 80px; /* Ensure label has space */
+                flex-direction: column;
+                position: relative;
             }
             
-            /* Input fields */
+            .item-row-content { display: flex; flex-direction: column; gap: 10px; }
+            .mobile-cell { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+            .mobile-cell::before { content: attr(data-label); font-weight: 600; color: #636e72; font-size: 0.9rem; }
+            
             .table input, .table select {
-                text-align: right; /* Text aligns right (Hebrew friendly) */
-                background: #f8f9fa !important;
-                border-radius: 8px;
-                padding: 8px 12px;
-                width: 100% !important; 
-                flex: 1; /* Take remaining space */
-                font-size: 0.95rem;
-                border: 1px solid #eee !important;
+                text-align: right; background: #f8f9fa !important;
+                border-radius: 8px; padding: 8px 12px;
+                width: 60% !important; border: 1px solid #eee !important;
             }
-            .table input:focus { background: white !important; border-color: #667eea !important; }
+            
+            /* Delete Button Mobile */
+            .btn-action-group { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 10px;}
+        }
 
-            /* Checkbox special styling */
-            .table td[data-label="האם נרכש?"] { justify-content: space-between; }
-            .table td[data-label="האם נרכש?"] .form-check { margin: 0; }
-
-            /* Delete Button - Moved to Bottom Left */
-            .btn-delete-mobile {
-                position: absolute;
-                bottom: 10px; /* Bottom instead of top */
-                left: 15px;   /* Left corner */
-                background: #ffecec;
-                color: #ff7675;
-                border-radius: 12px;
-                width: auto; 
-                height: 35px;
-                padding: 0 15px;
-                display: flex; align-items: center; justify-content: center;
-                font-size: 0.9rem;
-                font-weight: 500;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            }
-            .btn-delete-mobile::after { content: " מחיקה"; margin-right: 5px; } /* Add text label */
+        @media (min-width: 769px) {
+            .item-row-card { display: table-row; }
+            .item-row-content { display: contents; }
+            .mobile-cell { display: table-cell; vertical-align: middle; padding: 8px; }
+            .mobile-cell::before { display: none; }
+            .btn-action-group { display: none; } /* On desktop we use the table cell actions */
         }
 
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .fc-toolbar-title { font-size: 1.1rem !important; }
         .fc-button { font-size: 0.8rem !important; padding: 4px 8px !important; }
+        
+        .calculated-field { background-color: #e9ecef !important; color: #495057; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -141,22 +112,39 @@
     </div>
 
     <ul class="nav nav-pills nav-fill mb-3" id="pills-tab">
-        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-items">📦 ציוד</button></li>
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-items">📦 ציוד ותקציב</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-tasks">📅 משימות</button></li>
     </ul>
 
     <div class="tab-content">
         <div class="tab-pane fade show active" id="tab-items">
             <div class="row g-2 mb-3">
-                <div class="col-6"><div class="kpi-card"><div class="small text-muted">תקציב</div><div class="kpi-val" id="kpi-est">0</div></div></div>
-                <div class="col-6"><div class="kpi-card"><div class="small text-muted">בפועל</div><div class="kpi-val text-success" id="kpi-real">0</div></div></div>
+                <div class="col-6"><div class="kpi-card"><div class="small text-muted">תקציב משוער</div><div class="kpi-val" id="kpi-est">0</div></div></div>
+                <div class="col-6"><div class="kpi-card"><div class="small text-muted">הוצאות בפועל</div><div class="kpi-val text-success" id="kpi-real">0</div></div></div>
             </div>
 
             <div class="glass-card p-2">
-                <div class="d-flex justify-content-between align-items-center mb-3 px-2">
-                    <span class="fw-bold small text-muted"><i class="fa-solid fa-list"></i> רשימת פריטים</span>
-                    <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" onclick="addItem()">+ חדש</button>
+                <div class="d-flex justify-content-between align-items-center mb-3 px-2 gap-2">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle rounded-pill" type="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-filter"></i> סינון
+                        </button>
+                        <ul class="dropdown-menu text-end">
+                            <li><a class="dropdown-item" href="#" onclick="setFilter('all')">הכל</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="setFilter('purchased')">נרכש בלבד</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setFilter('not_purchased')">טרם נרכש</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="setFilter('ריהוט')">ריהוט</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setFilter('חשמל')">חשמל</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setFilter('מטבח')">מטבח</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setFilter('אחר')">אחר</a></li>
+                        </ul>
+                    </div>
+                    <span id="current-filter-label" class="badge bg-light text-dark ms-2">הכל</span>
+                    <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm ms-auto" onclick="addItem()">+ פריט חדש</button>
                 </div>
+
                 <div id="items-list"></div>
             </div>
         </div>
@@ -181,7 +169,6 @@
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // המפתחות החדשים שלך עודכנו כאן:
     const firebaseConfig = {
       apiKey: "AIzaSyC_EkuSJuu2H62VthOLN3086V6GdnVuzFU",
       authDomain: "my-moving-app-b5884.firebaseapp.com",
@@ -197,6 +184,7 @@
     let currentUser = null;
     let appData = { items: [], tasks: [] };
     let calendar;
+    let currentFilter = 'all';
 
     // Auth
     window.toggleMode = () => {
@@ -241,6 +229,8 @@
                 appData = snap.data();
                 if(!appData.items) appData.items = [];
                 if(!appData.tasks) appData.tasks = [];
+                // Ensure subItems array exists on older data
+                appData.items.forEach(i => { if(!i.subItems) i.subItems = []; });
             } else { saveData(); }
             renderAll();
         });
@@ -251,16 +241,77 @@
         await setDoc(doc(db, "users", currentUser.uid), appData);
     }
 
-    // Actions
-    window.addItem = () => { appData.items.unshift({ id: Date.now(), name: '', category: 'אחר', qty: 1, est: 0, real: 0, purchased: false }); saveData(); };
+    // --- Logic for Items & SubItems ---
+
+    window.addItem = () => { 
+        appData.items.unshift({ 
+            id: Date.now(), 
+            name: '', 
+            category: 'אחר', 
+            qty: 1, 
+            est: 0, 
+            real: 0, 
+            purchased: false,
+            subItems: [] 
+        }); 
+        saveData(); 
+    };
+
     window.updateItem = (id, field, val) => {
         const i = appData.items.find(x => x.id === id);
         if (i) {
-            i[field] = field === 'purchased' ? val : (['qty','est','real'].includes(field) ? Number(val) : val);
+            if(field === 'purchased') i.purchased = val;
+            else if(['qty','est','real'].includes(field)) i[field] = Number(val);
+            else i[field] = val;
             saveData();
         }
     };
-    window.deleteItem = (id) => { if(confirm('למחוק?')) { appData.items = appData.items.filter(x => x.id !== id); saveData(); } };
+
+    window.deleteItem = (id) => { 
+        if(confirm('למחוק את הפריט?')) { 
+            appData.items = appData.items.filter(x => x.id !== id); 
+            saveData(); 
+        } 
+    };
+
+    // Sub Items Logic
+    window.addSubItem = (parentId) => {
+        const parent = appData.items.find(x => x.id === parentId);
+        if(parent) {
+            if(!parent.subItems) parent.subItems = [];
+            parent.subItems.push({ id: Date.now(), name: '', cost: 0, qty: 1 });
+            saveData();
+        }
+    }
+
+    window.updateSubItem = (parentId, subId, field, val) => {
+        const parent = appData.items.find(x => x.id === parentId);
+        if(parent && parent.subItems) {
+            const sub = parent.subItems.find(s => s.id === subId);
+            if(sub) {
+                sub[field] = field === 'name' ? val : Number(val);
+                saveData();
+            }
+        }
+    }
+
+    window.deleteSubItem = (parentId, subId) => {
+        const parent = appData.items.find(x => x.id === parentId);
+        if(parent && parent.subItems) {
+            parent.subItems = parent.subItems.filter(s => s.id !== subId);
+            saveData();
+        }
+    }
+
+    // Filter Logic
+    window.setFilter = (filter) => {
+        currentFilter = filter;
+        const labelMap = { 'all': 'הכל', 'purchased': 'נרכש', 'not_purchased': 'טרם נרכש', 'ריהוט': 'ריהוט', 'חשמל': 'חשמל', 'מטבח': 'מטבח', 'אחר': 'אחר' };
+        document.getElementById('current-filter-label').innerText = labelMap[filter] || filter;
+        renderAll();
+    }
+
+    // Task Logic
     window.addTask = () => {
         const title = document.getElementById('task-desc').value;
         const date = document.getElementById('task-date').value;
@@ -269,41 +320,134 @@
     window.deleteTask = (id) => { appData.tasks = appData.tasks.filter(t => t.id !== id); saveData(); };
     window.toggleTask = (id) => { const t = appData.tasks.find(x => x.id === id); if(t) { t.done = !t.done; saveData(); } };
 
-    // Render
+    // --- Rendering ---
+
     function renderAll() {
         const list = document.getElementById('items-list');
-        if(appData.items.length === 0) {
-            list.innerHTML = '<div class="text-center text-muted py-5">אין פריטים עדיין</div>';
+        
+        // 1. Filter items
+        let filteredItems = appData.items;
+        if (currentFilter === 'purchased') filteredItems = appData.items.filter(i => i.purchased);
+        else if (currentFilter === 'not_purchased') filteredItems = appData.items.filter(i => !i.purchased);
+        else if (currentFilter !== 'all') filteredItems = appData.items.filter(i => i.category === currentFilter);
+
+        // 2. Render List
+        if(filteredItems.length === 0) {
+            list.innerHTML = '<div class="text-center text-muted py-5">אין פריטים להצגה</div>';
         } else {
             list.innerHTML = `
-            <table class="table table-borderless m-0">
-                <thead class="text-muted small bg-light rounded d-none d-md-table-header-group">
-                    <tr><th>שם</th><th width="80">קטגוריה</th><th width="60">כמות</th><th width="80">צפי</th><th width="80">בפועל</th><th width="50">נרכש</th><th></th></tr>
+            <table class="table table-borderless m-0 w-100">
+                <thead class="text-muted small bg-light rounded table-main-head">
+                    <tr><th></th><th>שם</th><th width="80">קטגוריה</th><th width="60">כמות</th><th width="80">צפי</th><th width="80">בפועל</th><th width="50">נרכש</th><th width="30"></th></tr>
                 </thead>
                 <tbody>
-                    ${appData.items.map(i => `
-                    <tr>
-                        <td data-label="שם מוצר"><input class="form-control form-control-sm border-0 bg-light" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="הכנס שם..."></td>
-                        <td data-label="קטגוריה"><select class="form-select form-select-sm border-0 bg-light" onchange="updateItem(${i.id},'category',this.value)">${['ריהוט','חשמל','מטבח','אחר'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select></td>
-                        <td data-label="כמות"><input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)"></td>
-                        <td data-label="מחיר משוער"><input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)"></td>
-                        <td data-label="מחיר בפועל"><input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.real}" onchange="updateItem(${i.id},'real',this.value)"></td>
-                        <td data-label="האם נרכש?"><div class="form-check d-flex justify-content-end justify-content-md-start"><input type="checkbox" class="form-check-input" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></div></td>
-                        <td class="text-end" style="border:none !important">
-                            <button class="btn btn-delete-mobile d-md-none" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
-                            <i class="fa-solid fa-trash text-danger d-none d-md-inline" style="cursor:pointer" onclick="deleteItem(${i.id})"></i>
-                        </td>
-                    </tr>
-                    `).join('')}
+                    ${filteredItems.map(i => {
+                        const hasSub = i.subItems && i.subItems.length > 0;
+                        // Calculate totals from subitems if they exist
+                        const calculatedReal = hasSub ? i.subItems.reduce((acc, s) => acc + (s.cost * s.qty), 0) : i.real;
+                        
+                        return `
+                        <tr class="item-row-card">
+                            <td class="mobile-cell" data-label="פירוט">
+                                <button class="btn btn-sm btn-outline-primary rounded-circle" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${i.id}">
+                                    <i class="fa-solid fa-list-ul"></i>
+                                </button>
+                            </td>
+                            <td class="mobile-cell" data-label="שם מוצר">
+                                <input class="form-control form-control-sm border-0 bg-light" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="הכנס שם...">
+                            </td>
+                            <td class="mobile-cell" data-label="קטגוריה">
+                                <select class="form-select form-select-sm border-0 bg-light" onchange="updateItem(${i.id},'category',this.value)">
+                                    ${['ריהוט','חשמל','מטבח','אחר'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}
+                                </select>
+                            </td>
+                            <td class="mobile-cell" data-label="כמות">
+                                <input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)" ${hasSub ? 'disabled' : ''}>
+                            </td>
+                            <td class="mobile-cell" data-label="מחיר משוער">
+                                <input type="number" class="form-control form-control-sm border-0 bg-light" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)">
+                            </td>
+                            <td class="mobile-cell" data-label="מחיר בפועל">
+                                <input type="number" class="form-control form-control-sm border-0 bg-light ${hasSub ? 'calculated-field':''}" 
+                                       value="${calculatedReal}" 
+                                       onchange="updateItem(${i.id},'real',this.value)" 
+                                       ${hasSub ? 'readonly' : ''}>
+                            </td>
+                            <td class="mobile-cell" data-label="האם נרכש?">
+                                <div class="form-check d-flex justify-content-end justify-content-md-center">
+                                    <input type="checkbox" class="form-check-input" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)">
+                                </div>
+                            </td>
+                            <td class="text-end d-none d-md-table-cell" style="border:none !important">
+                                <i class="fa-solid fa-trash text-danger" style="cursor:pointer" onclick="deleteItem(${i.id})"></i>
+                            </td>
+                            <div class="btn-action-group d-md-none">
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i> מחק פריט</button>
+                            </div>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="8" class="p-0 border-0">
+                                <div class="collapse" id="collapse-${i.id}">
+                                    <div class="sub-items-container mx-2 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="fw-bold text-primary">פירוט תת-מוצרים עבור ${i.name || 'הפריט'}:</small>
+                                            <button class="btn btn-sm btn-primary py-0" onclick="addSubItem(${i.id})">+ הוסף</button>
+                                        </div>
+                                        ${hasSub ? `
+                                            <div class="row g-1 fw-bold small text-muted text-center mb-1">
+                                                <div class="col-5">שם</div>
+                                                <div class="col-2">יח'</div>
+                                                <div class="col-3">מחיר</div>
+                                                <div class="col-2"></div>
+                                            </div>
+                                        ` : '<div class="text-muted small text-center">אין תתי-פריטים</div>'}
+                                        
+                                        ${(i.subItems || []).map(sub => `
+                                            <div class="row g-1 mb-1 align-items-center sub-row">
+                                                <div class="col-5"><input type="text" class="form-control form-control-sm" value="${sub.name}" placeholder="שם.." onchange="updateSubItem(${i.id}, ${sub.id}, 'name', this.value)"></div>
+                                                <div class="col-2"><input type="number" class="form-control form-control-sm px-1" value="${sub.qty}" onchange="updateSubItem(${i.id}, ${sub.id}, 'qty', this.value)"></div>
+                                                <div class="col-3"><input type="number" class="form-control form-control-sm px-1" value="${sub.cost}" onchange="updateSubItem(${i.id}, ${sub.id}, 'cost', this.value)"></div>
+                                                <div class="col-2 text-center"><i class="fa-solid fa-xmark text-danger" style="cursor:pointer" onclick="deleteSubItem(${i.id}, ${sub.id})"></i></div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('')}
                 </tbody>
             </table>`;
         }
 
-        const est = appData.items.reduce((s,i) => s + (i.est * i.qty), 0);
-        const real = appData.items.filter(i=>i.purchased).reduce((s,i) => s + (i.real * i.qty), 0);
-        document.getElementById('kpi-est').innerText = est.toLocaleString();
-        document.getElementById('kpi-real').innerText = real.toLocaleString();
+        // 3. KPI Calculation (Fixes for Actuals)
+        let totalEst = 0;
+        let totalReal = 0;
 
+        appData.items.forEach(i => {
+            // Est
+            totalEst += (i.est * i.qty);
+            
+            // Real Logic:
+            // If item has subItems, sum them up. If not, use item.real * item.qty
+            let itemRealCost = 0;
+            if (i.subItems && i.subItems.length > 0) {
+                itemRealCost = i.subItems.reduce((acc, sub) => acc + (sub.cost * sub.qty), 0);
+            } else {
+                itemRealCost = i.real * i.qty;
+            }
+
+            // Only add to Total Real if purchased is TRUE
+            if (i.purchased) {
+                totalReal += itemRealCost;
+            }
+        });
+
+        document.getElementById('kpi-est').innerText = totalEst.toLocaleString();
+        document.getElementById('kpi-real').innerText = totalReal.toLocaleString();
+
+        // Tasks Render
         document.getElementById('tasks-list').innerHTML = appData.tasks.map(t => `
             <div class="glass-card p-2 mb-2 d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
