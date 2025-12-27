@@ -7,7 +7,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#667eea">
-    <meta name="mobile-web-app-capable" content="yes">
     <title>המעבר שלי 🏠</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
@@ -19,135 +18,90 @@
         :root { --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%); --bg-color: #f0f2f5; }
         body { background: var(--bg-color) linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%) fixed; font-family: 'Rubik', sans-serif; min-height: 100vh; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
         
-        /* Auth Screen */
+        /* Login */
         #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .auth-box { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
         
-        /* Cards & KPIs */
+        /* UI Components */
         .glass-card { background: rgba(255,255,255,0.95); border-radius: 16px; padding: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 15px; }
         .kpi-card { background: white; border-radius: 12px; padding: 12px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; border: 1px solid #f0f0f0; }
         .kpi-val { font-size: 1.2rem; font-weight: 700; color: #2d3436; margin-top: 5px; }
         .btn-custom { border-radius: 50px; background-image: var(--primary-gradient); color: white; border: none; padding: 10px 0; width: 100%; font-weight: 500; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
-        .nav-pills .nav-link { border-radius: 50px; margin: 0 5px; font-size: 0.9rem; transition: all 0.3s; }
-        .nav-pills .nav-link.active { background: var(--primary-gradient); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
-
-        /* --- DESKTOP TABLE FIXES (Strict Layout) --- */
-        .table-container { overflow-x: auto; }
-        .fixed-table { 
-            table-layout: fixed; 
-            width: 100%; 
-            border-collapse: separate; 
-            border-spacing: 0 5px; 
-        }
         
-        .table th {
-            font-size: 0.85rem; color: #6c757d; font-weight: 600; vertical-align: middle; border: none;
-        }
-        
-        /* Input Styling */
-        .table input, .table select { 
-            width: 100%; 
-            box-sizing: border-box; 
-            font-size: 0.9rem; 
-            padding: 6px 10px;
-            border-radius: 8px; 
-            border: 1px solid #e0e0e0; 
-            background-color: #fff; 
-            height: 38px;
-            transition: all 0.2s;
-        }
-        .table input:focus, .table select:focus { border-color: #667eea; outline: none; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
-        
-        .item-row-card td { 
-            background: white; 
-            vertical-align: middle; 
-            padding: 8px 5px;
-            border-top: 1px solid #f0f0f0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .item-row-card td:first-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-right: 1px solid #f0f0f0; }
-        .item-row-card td:last-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-left: 1px solid #f0f0f0; }
+        /* Inputs */
+        input, select { font-size: 16px !important; /* Prevents zoom on mobile */ } 
+        .form-control-sm, .form-select-sm { height: 40px; border-radius: 8px; border: 1px solid #e0e0e0; padding: 5px 10px; background: #fff; }
+        .form-control-sm:focus, .form-select-sm:focus { border-color: #667eea; box-shadow: none; }
 
-        .sub-items-container { background: #f8f9fa; border-radius: 10px; padding: 15px; margin: 5px 10px 15px 10px; border: 1px dashed #ced4da; }
+        /* --- DESKTOP TABLE LAYOUT --- */
+        @media (min-width: 992px) {
+            .table-container { overflow-x: auto; }
+            .fixed-table { table-layout: fixed; width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+            .fixed-table th { color: #888; font-weight: 500; font-size: 0.85rem; padding-bottom: 5px; }
+            .item-row-card { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s; }
+            .item-row-card:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+            .item-row-card td { vertical-align: middle; padding: 10px; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; }
+            .item-row-card td:first-child { border-left: 1px solid #f0f0f0; border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+            .item-row-card td:last-child { border-right: 1px solid #f0f0f0; border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+            .mobile-label { display: none; }
+        }
 
-        /* --- MOBILE CARD VIEW (The Magic Fix) --- */
-        @media (max-width: 992px) {
+        /* --- MOBILE CARD LAYOUT (The Big Fix) --- */
+        @media (max-width: 991px) {
             .container-fluid { padding: 10px; }
-            .table-main-head { display: none; } /* Hide headers */
+            .table-main-head { display: none; } /* Hide Table Headers */
+
+            /* Turn Table Rows into Cards */
+            .fixed-table, tbody, tr, td { display: block; width: 100%; }
             
-            /* Make table block-level */
-            .fixed-table, .fixed-table tbody, .fixed-table tr, .fixed-table td { display: block; width: 100%; }
-            
-            /* Card Design */
             .item-row-card {
                 background: white;
                 margin-bottom: 15px;
                 border-radius: 16px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-                border: 1px solid #eee;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                border: 1px solid #f0f0f0;
                 padding: 15px;
+                display: flex;
+                flex-wrap: wrap; /* Allows grid-like behavior */
+                gap: 10px;
                 position: relative;
             }
-            
-            /* Inside the card styling */
-            .mobile-cell {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 8px 0 !important;
-                border: none !important;
-                border-bottom: 1px solid #f9f9f9 !important;
-            }
-            .mobile-cell:last-child { border-bottom: none !important; }
 
-            /* Labels */
-            .mobile-cell::before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: #888;
-                font-size: 0.9rem;
-                min-width: 90px;
+            /* 1. Name Field - Full Width & Bold */
+            td[data-col="name"] { width: 100%; order: 1; padding: 0; margin-bottom: 5px; }
+            td[data-col="name"] input { 
+                font-weight: 700; font-size: 1.1rem !important; border: none; border-bottom: 2px solid #667eea; 
+                border-radius: 0; padding: 0 0 5px 0; background: transparent;
             }
-            
-            .mobile-cell input, .mobile-cell select { 
-                width: 65% !important; 
-                text-align: right; 
-                background: #f8f9fa;
-                border: 1px solid #eee;
-            }
+            td[data-col="name"] input:focus { border-bottom-color: #764ba2; }
 
-            /* Special styling for the Name (Top of Card) */
-            .mobile-cell[data-label="שם מוצר"] {
-                border-bottom: 2px solid #667eea !important;
-                margin-bottom: 10px;
-                padding-bottom: 10px !important;
-            }
-            .mobile-cell[data-label="שם מוצר"]::before { display: none; }
-            .mobile-cell[data-label="שם מוצר"] input {
-                width: 100% !important;
-                font-weight: 700;
-                font-size: 1.1rem;
-                border: none;
-                background: transparent;
-                padding: 0;
-            }
+            /* 2. Category & Payment - 50% width each */
+            td[data-col="cat"], td[data-col="pay"] { width: 48%; order: 2; padding: 0; }
             
-            /* Special styling for Expand Button */
-            .mobile-cell[data-label="פירוט"] button { width: 100%; margin-top: 5px; }
+            /* 3. Numbers Row - Qty, Est, Real - 33% each */
+            td[data-col="qty"], td[data-col="est"], td[data-col="real"] { width: 31%; order: 3; padding: 0; }
             
-            /* Delete button styling on mobile */
-            .mobile-actions { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-        }
+            /* Labels for inputs */
+            .mobile-label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 2px; }
 
-        /* Desktop Only styling */
-        @media (min-width: 993px) {
-            .mobile-actions { display: none; }
-            .mobile-cell[data-label="פירוט"] { text-align: center; }
+            /* 4. Actions Row - Bottom */
+            td[data-col="expand"], td[data-col="purchased"], td[data-col="delete"] { 
+                order: 4; width: auto; padding: 0; margin-top: 10px; 
+                display: flex; align-items: center; justify-content: center;
+            }
+            
+            /* Specific Alignments */
+            td[data-col="expand"] { flex-grow: 1; justify-content: flex-start; } /* Left */
+            td[data-col="purchased"] { margin-right: auto; margin-left: 15px; } /* Center-Right */
+            td[data-col="delete"] { justify-content: flex-end; } /* Right */
+
+            /* Sub Items Container Mobile Fix */
+            .sub-items-container { margin: 0; border: none; background: #fcfcfc; border-top: 1px dashed #ddd; }
         }
 
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .calculated-field { background-color: #e9ecef !important; color: #495057; cursor: not-allowed; }
+        .calculated-field { background-color: #e9ecef !important; color: #495057; }
     </style>
 </head>
 <body>
@@ -201,7 +155,7 @@
                         </ul>
                     </div>
                     <span id="current-filter-label" class="badge bg-light text-dark ms-2">הכל</span>
-                    <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm ms-auto" onclick="addItem()">+ פריט חדש</button>
+                    <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm ms-auto" onclick="addItem()">+ פריט</button>
                 </div>
 
                 <div id="items-list" class="table-container"></div>
@@ -245,13 +199,11 @@
     let calendar;
     let currentFilter = 'all';
 
-    // Auth & Basic Logic
     window.toggleMode = () => { document.getElementById('login-form').style.display = document.getElementById('login-form').style.display === 'none' ? 'block' : 'none'; document.getElementById('register-form').style.display = document.getElementById('register-form').style.display === 'none' ? 'block' : 'none'; }
     window.handleAuth = async (mode) => {
         const email = document.getElementById(mode === 'login' ? 'email' : 'reg-email').value;
         const pass = document.getElementById(mode === 'login' ? 'password' : 'reg-pass').value;
-        const msg = document.getElementById('auth-msg');
-        msg.innerText = ''; document.getElementById('auth-loader').style.display = 'block';
+        const msg = document.getElementById('auth-msg'); msg.innerText = ''; document.getElementById('auth-loader').style.display = 'block';
         try { if (mode === 'login') await signInWithEmailAndPassword(auth, email, pass); else await createUserWithEmailAndPassword(auth, email, pass); } 
         catch (error) { msg.innerText = "שגיאה: " + error.message; document.getElementById('auth-loader').style.display = 'none'; }
     };
@@ -276,7 +228,6 @@
     window.updateItem = (id, field, val) => { const i = appData.items.find(x => x.id === id); if (i) { if(field === 'purchased') i.purchased = val; else if(['qty','est','real'].includes(field)) i[field] = Number(val); else i[field] = val; saveData(); } };
     window.deleteItem = (id) => { if(confirm('למחוק?')) { appData.items = appData.items.filter(x => x.id !== id); saveData(); } };
     
-    // Sub Items
     window.addSubItem = (parentId) => { const p = appData.items.find(x => x.id === parentId); if(p) { if(!p.subItems) p.subItems=[]; p.subItems.push({id:Date.now(), name:'', cost:0, qty:1}); saveData(); } }
     window.updateSubItem = (parentId, subId, field, val) => { const p = appData.items.find(x => x.id === parentId); if(p&&p.subItems) { const s = p.subItems.find(x => x.id === subId); if(s) { s[field] = field==='name'?val:Number(val); saveData(); } } }
     window.deleteSubItem = (parentId, subId) => { const p = appData.items.find(x => x.id === parentId); if(p&&p.subItems) { p.subItems = p.subItems.filter(x => x.id !== subId); saveData(); } }
@@ -298,19 +249,9 @@
             list.innerHTML = `
             <table class="fixed-table m-0">
                 <colgroup>
-                    <col style="width: 5%;"> <col style="width: 20%;"> <col style="width: 12%;"> <col style="width: 12%;"> <col style="width: 8%;"> <col style="width: 12%;"> <col style="width: 12%;"> <col style="width: 10%;"> <col style="width: 9%;"> </colgroup>
-                <thead class="text-muted small bg-light rounded table-main-head">
-                    <tr>
-                        <th></th>
-                        <th>שם מוצר</th>
-                        <th>קטגוריה</th>
-                        <th>תשלום</th>
-                        <th>כמות</th>
-                        <th>צפי</th>
-                        <th>בפועל</th>
-                        <th class="text-center">נרכש</th>
-                        <th></th>
-                    </tr>
+                    <col style="width: 5%;"> <col style="width: 20%;"> <col style="width: 12%;"> <col style="width: 12%;"> <col style="width: 8%;">  <col style="width: 12%;"> <col style="width: 12%;"> <col style="width: 10%;"> <col style="width: 9%;">  </colgroup>
+                <thead class="table-main-head">
+                    <tr><th></th><th>שם מוצר</th><th>קטגוריה</th><th>תשלום</th><th>כמות</th><th>צפי</th><th>בפועל</th><th class="text-center">נרכש</th><th></th></tr>
                 </thead>
                 <tbody>
                     ${filtered.map(i => {
@@ -320,42 +261,48 @@
                         
                         return `
                         <tr class="item-row-card">
-                             <td class="mobile-cell" data-label="פירוט">
-                                <button class="btn btn-sm btn-outline-primary rounded-circle border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${i.id}">
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </button>
-                            </td>
-                            <td class="mobile-cell" data-label="שם מוצר">
-                                <input type="text" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="שם מוצר..." class="fw-bold">
-                            </td>
-                            <td class="mobile-cell" data-label="קטגוריה">
-                                <select onchange="updateItem(${i.id},'category',this.value)">${['אחר','ריהוט','חשמל','מטבח','שיפוץ'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select>
-                            </td>
-                            <td class="mobile-cell" data-label="אופן תשלום">
-                                <select onchange="updateItem(${i.id},'paymentMethod',this.value)">
-                                    ${['אשראי','מזומן','העברה','ביט','צ\'ק','אחר'].map(c=>`<option ${c===payMethod?'selected':''}>${c}</option>`).join('')}
-                                </select>
-                            </td>
-                            <td class="mobile-cell" data-label="כמות">
-                                <input type="number" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)" ${hasSub?'disabled':''}>
-                            </td>
-                            <td class="mobile-cell" data-label="צפי">
-                                <input type="number" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)">
-                            </td>
-                            <td class="mobile-cell" data-label="בפועל">
-                                <input type="number" class="${hasSub?'calculated-field':''}" value="${realVal}" onchange="updateItem(${i.id},'real',this.value)" ${hasSub?'readonly':''}>
-                            </td>
-                            <td class="mobile-cell" data-label="נרכש">
-                                <div class="form-check d-flex justify-content-end justify-content-lg-center"><input class="form-check-input" type="checkbox" style="width:20px;height:20px" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></div>
-                            </td>
-                            <td class="mobile-cell d-none d-lg-table-cell text-center">
-                                <i class="fa-solid fa-trash text-danger opacity-50 hover-opacity-100" style="cursor:pointer" onclick="deleteItem(${i.id})"></i>
+                            <td data-col="name">
+                                <input type="text" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="שם מוצר...">
                             </td>
                             
-                            <div class="mobile-actions">
-                                <button class="btn btn-sm btn-outline-danger border-0" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i> מחיקה</button>
-                                <span class="badge ${i.purchased?'bg-success':'bg-secondary'}">${i.purchased?'נרכש!':'ממתין'}</span>
-                            </div>
+                            <td data-col="cat">
+                                <span class="mobile-label">קטגוריה</span>
+                                <select class="form-select form-select-sm" onchange="updateItem(${i.id},'category',this.value)">${['אחר','ריהוט','חשמל','מטבח','שיפוץ'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select>
+                            </td>
+
+                            <td data-col="pay">
+                                <span class="mobile-label">תשלום</span>
+                                <select class="form-select form-select-sm" onchange="updateItem(${i.id},'paymentMethod',this.value)">${['אשראי','מזומן','העברה','ביט','צ\'ק'].map(c=>`<option ${c===payMethod?'selected':''}>${c}</option>`).join('')}</select>
+                            </td>
+
+                            <td data-col="qty">
+                                <span class="mobile-label">כמות</span>
+                                <input type="number" class="form-control form-control-sm" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)" ${hasSub?'disabled':''}>
+                            </td>
+
+                            <td data-col="est">
+                                <span class="mobile-label">צפי</span>
+                                <input type="number" class="form-control form-control-sm" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)">
+                            </td>
+
+                            <td data-col="real">
+                                <span class="mobile-label">בפועל</span>
+                                <input type="number" class="form-control form-control-sm ${hasSub?'calculated-field':''}" value="${realVal}" onchange="updateItem(${i.id},'real',this.value)" ${hasSub?'readonly':''}>
+                            </td>
+
+                            <td data-col="expand">
+                                <button class="btn btn-sm btn-outline-primary border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${i.id}">
+                                    <i class="fa-solid fa-list-ul"></i> ${hasSub ? ' פירוט' : ' הוסף פירוט'}
+                                </button>
+                            </td>
+
+                            <td data-col="purchased">
+                                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" style="width:40px;height:20px" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></div>
+                            </td>
+
+                            <td data-col="delete">
+                                <button class="btn btn-sm text-danger border-0" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
+                            </td>
                         </tr>
                         
                         <tr>
@@ -363,7 +310,7 @@
                                 <div class="collapse" id="collapse-${i.id}">
                                     <div class="sub-items-container">
                                         <div class="d-flex justify-content-between mb-2">
-                                            <small class="fw-bold">תתי-מוצרים (מרכיבים את המחיר בפועל):</small>
+                                            <small class="fw-bold">מרכיבי עלות:</small>
                                             <button class="btn btn-sm btn-primary py-0" onclick="addSubItem(${i.id})">+ הוסף</button>
                                         </div>
                                         ${(i.subItems||[]).map(s => `
@@ -393,7 +340,6 @@
         document.getElementById('kpi-est').innerText = tEst.toLocaleString();
         document.getElementById('kpi-real').innerText = tReal.toLocaleString();
         
-        // Tasks
         document.getElementById('tasks-list').innerHTML = appData.tasks.map(t => `
             <div class="glass-card p-2 mb-2 d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
