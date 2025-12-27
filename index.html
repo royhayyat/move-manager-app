@@ -28,75 +28,57 @@
         .kpi-val { font-size: 1.2rem; font-weight: 700; color: #2d3436; margin-top: 5px; }
         .btn-custom { border-radius: 50px; background-image: var(--primary-gradient); color: white; border: none; padding: 10px 0; width: 100%; font-weight: 500; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
         
-        /* Inputs */
-        input, select { font-size: 16px !important; /* Prevents zoom on mobile */ } 
-        .form-control-sm, .form-select-sm { height: 40px; border-radius: 8px; border: 1px solid #e0e0e0; padding: 5px 10px; background: #fff; }
-        .form-control-sm:focus, .form-select-sm:focus { border-color: #667eea; box-shadow: none; }
+        /* Inputs & Selects Standard */
+        .form-control-sm, .form-select-sm { border-radius: 8px; border: 1px solid #dee2e6; padding: 6px 10px; background: #fff; }
 
-        /* --- DESKTOP TABLE LAYOUT --- */
+        /* --- DESKTOP TABLE (Visible only on large screens) --- */
         @media (min-width: 992px) {
-            .table-container { overflow-x: auto; }
-            .fixed-table { table-layout: fixed; width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-            .fixed-table th { color: #888; font-weight: 500; font-size: 0.85rem; padding-bottom: 5px; }
-            .item-row-card { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s; }
-            .item-row-card:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-            .item-row-card td { vertical-align: middle; padding: 10px; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; }
-            .item-row-card td:first-child { border-left: 1px solid #f0f0f0; border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
-            .item-row-card td:last-child { border-right: 1px solid #f0f0f0; border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
-            .mobile-label { display: none; }
+            .mobile-only-view { display: none !important; }
+            .desktop-only-table { display: table !important; width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 10px; }
+            .desktop-only-table th { color: #888; font-weight: 600; font-size: 0.85rem; padding-bottom: 5px; }
+            .desktop-row { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+            .desktop-row td { padding: 10px; vertical-align: middle; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; }
+            .desktop-row td:first-child { border-left: 1px solid #f0f0f0; border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+            .desktop-row td:last-child { border-right: 1px solid #f0f0f0; border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
         }
 
-        /* --- MOBILE CARD LAYOUT (The Big Fix) --- */
+        /* --- MOBILE CARD VIEW (Visible only on small screens) --- */
         @media (max-width: 991px) {
-            .container-fluid { padding: 10px; }
-            .table-main-head { display: none; } /* Hide Table Headers */
-
-            /* Turn Table Rows into Cards */
-            .fixed-table, tbody, tr, td { display: block; width: 100%; }
+            .desktop-only-table { display: none !important; }
+            .mobile-only-view { display: block !important; }
             
-            .item-row-card {
+            .mobile-card {
                 background: white;
-                margin-bottom: 15px;
                 border-radius: 16px;
+                padding: 15px;
+                margin-bottom: 15px;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.05);
                 border: 1px solid #f0f0f0;
-                padding: 15px;
-                display: flex;
-                flex-wrap: wrap; /* Allows grid-like behavior */
-                gap: 10px;
                 position: relative;
             }
 
-            /* 1. Name Field - Full Width & Bold */
-            td[data-col="name"] { width: 100%; order: 1; padding: 0; margin-bottom: 5px; }
-            td[data-col="name"] input { 
-                font-weight: 700; font-size: 1.1rem !important; border: none; border-bottom: 2px solid #667eea; 
-                border-radius: 0; padding: 0 0 5px 0; background: transparent;
+            /* Header: Name + Category */
+            .m-card-header { border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 10px; }
+            .m-card-name input { 
+                font-weight: 700; font-size: 1.1rem; border: none; background: transparent; width: 100%; 
+                border-bottom: 2px solid transparent; transition: 0.3s; padding: 0;
             }
-            td[data-col="name"] input:focus { border-bottom-color: #764ba2; }
-
-            /* 2. Category & Payment - 50% width each */
-            td[data-col="cat"], td[data-col="pay"] { width: 48%; order: 2; padding: 0; }
+            .m-card-name input:focus { border-bottom-color: #667eea; outline: none; }
             
-            /* 3. Numbers Row - Qty, Est, Real - 33% each */
-            td[data-col="qty"], td[data-col="est"], td[data-col="real"] { width: 31%; order: 3; padding: 0; }
+            /* Grid for Data */
+            .m-card-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+            .m-data-item label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 2px; }
+            .m-data-item input, .m-data-item select { width: 100%; font-size: 0.9rem; }
             
-            /* Labels for inputs */
-            .mobile-label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 2px; }
+            /* Payment & Category Row */
+            .m-card-details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
 
-            /* 4. Actions Row - Bottom */
-            td[data-col="expand"], td[data-col="purchased"], td[data-col="delete"] { 
-                order: 4; width: auto; padding: 0; margin-top: 10px; 
-                display: flex; align-items: center; justify-content: center;
+            /* Footer Actions */
+            .m-card-footer { 
+                display: flex; justify-content: space-between; align-items: center; 
+                border-top: 1px dashed #eee; padding-top: 12px; 
             }
-            
-            /* Specific Alignments */
-            td[data-col="expand"] { flex-grow: 1; justify-content: flex-start; } /* Left */
-            td[data-col="purchased"] { margin-right: auto; margin-left: 15px; } /* Center-Right */
-            td[data-col="delete"] { justify-content: flex-end; } /* Right */
-
-            /* Sub Items Container Mobile Fix */
-            .sub-items-container { margin: 0; border: none; background: #fcfcfc; border-top: 1px dashed #ddd; }
+            .m-btn-expand { color: #667eea; font-weight: 500; font-size: 0.9rem; background: none; border: none; padding: 0; }
         }
 
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
@@ -158,7 +140,7 @@
                     <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm ms-auto" onclick="addItem()">+ פריט</button>
                 </div>
 
-                <div id="items-list" class="table-container"></div>
+                <div id="items-list"></div>
             </div>
         </div>
 
@@ -245,92 +227,81 @@
 
         if(filtered.length === 0) {
             list.innerHTML = '<div class="text-center text-muted py-5">אין פריטים להצגה</div>';
-        } else {
-            list.innerHTML = `
-            <table class="fixed-table m-0">
-                <colgroup>
-                    <col style="width: 5%;"> <col style="width: 20%;"> <col style="width: 12%;"> <col style="width: 12%;"> <col style="width: 8%;">  <col style="width: 12%;"> <col style="width: 12%;"> <col style="width: 10%;"> <col style="width: 9%;">  </colgroup>
-                <thead class="table-main-head">
-                    <tr><th></th><th>שם מוצר</th><th>קטגוריה</th><th>תשלום</th><th>כמות</th><th>צפי</th><th>בפועל</th><th class="text-center">נרכש</th><th></th></tr>
-                </thead>
-                <tbody>
-                    ${filtered.map(i => {
-                        const hasSub = i.subItems && i.subItems.length > 0;
-                        const realVal = hasSub ? i.subItems.reduce((a,s)=>a+(s.cost*s.qty),0) : i.real;
-                        const payMethod = i.paymentMethod || 'אשראי';
-                        
-                        return `
-                        <tr class="item-row-card">
-                            <td data-col="name">
-                                <input type="text" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="שם מוצר...">
-                            </td>
-                            
-                            <td data-col="cat">
-                                <span class="mobile-label">קטגוריה</span>
-                                <select class="form-select form-select-sm" onchange="updateItem(${i.id},'category',this.value)">${['אחר','ריהוט','חשמל','מטבח','שיפוץ'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select>
-                            </td>
+            return;
+        } 
+        
+        // --- 1. DESKTOP RENDER (Table) ---
+        let htmlDesktop = `
+        <table class="desktop-only-table">
+            <colgroup>
+                <col style="width: 5%;"><col style="width: 20%;"><col style="width: 12%;"><col style="width: 12%;">
+                <col style="width: 8%;"><col style="width: 12%;"><col style="width: 12%;"><col style="width: 10%;"><col style="width: 9%;">
+            </colgroup>
+            <thead class="bg-light rounded">
+                <tr><th></th><th>שם מוצר</th><th>קטגוריה</th><th>תשלום</th><th>כמות</th><th>צפי</th><th>בפועל</th><th class="text-center">נרכש</th><th></th></tr>
+            </thead>
+            <tbody>`;
 
-                            <td data-col="pay">
-                                <span class="mobile-label">תשלום</span>
-                                <select class="form-select form-select-sm" onchange="updateItem(${i.id},'paymentMethod',this.value)">${['אשראי','מזומן','העברה','ביט','צ\'ק'].map(c=>`<option ${c===payMethod?'selected':''}>${c}</option>`).join('')}</select>
-                            </td>
+        // --- 2. MOBILE RENDER (Cards) ---
+        let htmlMobile = `<div class="mobile-only-view">`;
 
-                            <td data-col="qty">
-                                <span class="mobile-label">כמות</span>
-                                <input type="number" class="form-control form-control-sm" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)" ${hasSub?'disabled':''}>
-                            </td>
+        filtered.forEach(i => {
+            const hasSub = i.subItems && i.subItems.length > 0;
+            const realVal = hasSub ? i.subItems.reduce((a,s)=>a+(s.cost*s.qty),0) : i.real;
+            const payMethod = i.paymentMethod || 'אשראי';
+            
+            // Desktop Row
+            htmlDesktop += `
+            <tr class="desktop-row">
+                <td class="text-center"><button class="btn btn-sm btn-outline-primary rounded-circle border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-d-${i.id}"><i class="fa-solid fa-chevron-down"></i></button></td>
+                <td><input type="text" class="form-control form-control-sm border-0" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="שם..."></td>
+                <td><select class="form-select form-select-sm border-0" onchange="updateItem(${i.id},'category',this.value)">${['אחר','ריהוט','חשמל','מטבח','שיפוץ'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select></td>
+                <td><select class="form-select form-select-sm border-0" onchange="updateItem(${i.id},'paymentMethod',this.value)">${['אשראי','מזומן','העברה','ביט','צ\'ק'].map(c=>`<option ${c===payMethod?'selected':''}>${c}</option>`).join('')}</select></td>
+                <td><input type="number" class="form-control form-control-sm border-0" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)" ${hasSub?'disabled':''}></td>
+                <td><input type="number" class="form-control form-control-sm border-0" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)"></td>
+                <td><input type="number" class="form-control form-control-sm border-0 ${hasSub?'calculated-field':''}" value="${realVal}" onchange="updateItem(${i.id},'real',this.value)" ${hasSub?'readonly':''}></td>
+                <td class="text-center"><input class="form-check-input" type="checkbox" style="width:20px;height:20px" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></td>
+                <td class="text-center"><i class="fa-solid fa-trash text-danger opacity-50 hover-opacity-100" style="cursor:pointer" onclick="deleteItem(${i.id})"></i></td>
+            </tr>
+            <tr class="desktop-row"><td colspan="9" class="p-0 border-0"><div class="collapse" id="collapse-d-${i.id}"><div class="bg-light p-3 border-bottom">${renderSubItems(i, 'd')}</div></div></td></tr>`;
 
-                            <td data-col="est">
-                                <span class="mobile-label">צפי</span>
-                                <input type="number" class="form-control form-control-sm" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)">
-                            </td>
+            // Mobile Card
+            htmlMobile += `
+            <div class="mobile-card">
+                <div class="m-card-header">
+                    <div class="m-card-name"><input type="text" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="הכנס שם מוצר..."></div>
+                </div>
+                
+                <div class="m-card-details">
+                    <div class="m-data-item"><label>קטגוריה</label><select class="form-select form-select-sm" onchange="updateItem(${i.id},'category',this.value)">${['אחר','ריהוט','חשמל','מטבח','שיפוץ'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select></div>
+                    <div class="m-data-item"><label>תשלום</label><select class="form-select form-select-sm" onchange="updateItem(${i.id},'paymentMethod',this.value)">${['אשראי','מזומן','העברה','ביט','צ\'ק'].map(c=>`<option ${c===payMethod?'selected':''}>${c}</option>`).join('')}</select></div>
+                </div>
 
-                            <td data-col="real">
-                                <span class="mobile-label">בפועל</span>
-                                <input type="number" class="form-control form-control-sm ${hasSub?'calculated-field':''}" value="${realVal}" onchange="updateItem(${i.id},'real',this.value)" ${hasSub?'readonly':''}>
-                            </td>
+                <div class="m-card-grid">
+                    <div class="m-data-item"><label>כמות</label><input type="number" class="form-control form-control-sm" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)" ${hasSub?'disabled':''}></div>
+                    <div class="m-data-item"><label>צפי</label><input type="number" class="form-control form-control-sm" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)"></div>
+                    <div class="m-data-item"><label>בפועל</label><input type="number" class="form-control form-control-sm ${hasSub?'calculated-field':''}" value="${realVal}" onchange="updateItem(${i.id},'real',this.value)" ${hasSub?'readonly':''}></div>
+                </div>
+                
+                <div class="collapse mb-3" id="collapse-m-${i.id}">
+                    <div class="bg-light p-2 rounded">${renderSubItems(i, 'm')}</div>
+                </div>
 
-                            <td data-col="expand">
-                                <button class="btn btn-sm btn-outline-primary border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${i.id}">
-                                    <i class="fa-solid fa-list-ul"></i> ${hasSub ? ' פירוט' : ' הוסף פירוט'}
-                                </button>
-                            </td>
+                <div class="m-card-footer">
+                    <button class="m-btn-expand" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-m-${i.id}"><i class="fa-solid fa-list-ul"></i> ${hasSub?' פריטים':' הוסף פירוט'}</button>
+                    <div class="form-check form-switch d-flex align-items-center gap-2"><label class="form-check-label small">נרכש?</label><input class="form-check-input" type="checkbox" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></div>
+                    <button class="btn btn-sm text-danger" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>`;
+        });
 
-                            <td data-col="purchased">
-                                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" style="width:40px;height:20px" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></div>
-                            </td>
+        htmlDesktop += `</tbody></table>`;
+        htmlMobile += `</div>`;
+        
+        // Inject based on CSS media queries handling display
+        list.innerHTML = htmlDesktop + htmlMobile;
 
-                            <td data-col="delete">
-                                <button class="btn btn-sm text-danger border-0" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td colspan="9" class="p-0 border-0">
-                                <div class="collapse" id="collapse-${i.id}">
-                                    <div class="sub-items-container">
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <small class="fw-bold">מרכיבי עלות:</small>
-                                            <button class="btn btn-sm btn-primary py-0" onclick="addSubItem(${i.id})">+ הוסף</button>
-                                        </div>
-                                        ${(i.subItems||[]).map(s => `
-                                            <div class="row g-1 mb-2 align-items-center">
-                                                <div class="col-5"><input type="text" class="form-control form-control-sm" value="${s.name}" placeholder="שם" onchange="updateSubItem(${i.id},${s.id},'name',this.value)"></div>
-                                                <div class="col-2"><input type="number" class="form-control form-control-sm px-1" value="${s.qty}" onchange="updateSubItem(${i.id},${s.id},'qty',this.value)"></div>
-                                                <div class="col-3"><input type="number" class="form-control form-control-sm px-1" value="${s.cost}" onchange="updateSubItem(${i.id},${s.id},'cost',this.value)"></div>
-                                                <div class="col-2 text-center"><i class="fa-solid fa-xmark text-danger" style="cursor:pointer" onclick="deleteSubItem(${i.id},${s.id})"></i></div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        `;
-                    }).join('')}
-                </tbody>
-            </table>`;
-        }
-
+        // KPI Calc
         let tEst = 0, tReal = 0;
         appData.items.forEach(i => {
             tEst += (i.est * i.qty);
@@ -340,6 +311,7 @@
         document.getElementById('kpi-est').innerText = tEst.toLocaleString();
         document.getElementById('kpi-real').innerText = tReal.toLocaleString();
         
+        // Tasks
         document.getElementById('tasks-list').innerHTML = appData.tasks.map(t => `
             <div class="glass-card p-2 mb-2 d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
@@ -350,6 +322,19 @@
             </div>`).join('');
             
         if(calendar) { calendar.removeAllEvents(); calendar.addEventSource(appData.tasks.filter(t=>t.date).map(t => ({ title: t.title, start: t.date, color: t.done?'#ccc':'#667eea' }))); }
+    }
+
+    function renderSubItems(i, mode) {
+        return `
+        <div class="d-flex justify-content-between mb-2"><small class="fw-bold">מרכיבים:</small><button class="btn btn-sm btn-primary py-0" onclick="addSubItem(${i.id})">+ הוסף</button></div>
+        ${(i.subItems||[]).map(s => `
+            <div class="row g-1 mb-2 align-items-center">
+                <div class="col-5"><input type="text" class="form-control form-control-sm" value="${s.name}" placeholder="שם" onchange="updateSubItem(${i.id},${s.id},'name',this.value)"></div>
+                <div class="col-2"><input type="number" class="form-control form-control-sm px-1" value="${s.qty}" onchange="updateSubItem(${i.id},${s.id},'qty',this.value)"></div>
+                <div class="col-3"><input type="number" class="form-control form-control-sm px-1" value="${s.cost}" onchange="updateSubItem(${i.id},${s.id},'cost',this.value)"></div>
+                <div class="col-2 text-center"><i class="fa-solid fa-xmark text-danger" style="cursor:pointer" onclick="deleteSubItem(${i.id},${s.id})"></i></div>
+            </div>`).join('')}
+        `;
     }
 
     function initCalendar() {
