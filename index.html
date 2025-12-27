@@ -35,12 +35,25 @@
         .sub-items-container { background: #f8f9fa; border-radius: 10px; padding: 10px; margin-top: 10px; border: 1px dashed #ced4da; }
         .sub-row input { background: #fff !important; border: 1px solid #ddd !important; font-size: 0.85rem !important; }
 
-        /* --- Mobile Table Fixes --- */
+        /* --- Table Fixes --- */
+        .table { table-layout: fixed; width: 100%; }
+        .table th { font-size: 0.85rem; color: #6c757d; font-weight: 600; vertical-align: middle; }
+        .table input, .table select { 
+            width: 100%; 
+            min-width: 0; /* Prevents overflow */
+            font-size: 0.9rem; 
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            background-color: #fcfcfc;
+        }
+        .table input:focus, .table select:focus { background-color: #fff; border-color: #667eea; outline: none; box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2); }
+
+        /* --- Mobile Responsive Fixes --- */
         @media (max-width: 768px) {
             .container-fluid { padding: 12px; }
-            .table-main-head { display: none; } /* Hide main headers only */
+            .table-main-head { display: none; } 
             
-            /* Card Style for Rows */
             .item-row-card {
                 background: white;
                 margin-bottom: 20px;
@@ -50,36 +63,25 @@
                 padding: 15px;
                 display: flex;
                 flex-direction: column;
-                position: relative;
+                gap: 12px;
             }
             
-            .item-row-content { display: flex; flex-direction: column; gap: 10px; }
-            .mobile-cell { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-            .mobile-cell::before { content: attr(data-label); font-weight: 600; color: #636e72; font-size: 0.9rem; }
+            .mobile-cell { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 !important; border: none !important; }
+            .mobile-cell::before { content: attr(data-label); font-weight: 600; color: #636e72; font-size: 0.9rem; min-width: 100px; }
+            .mobile-cell input, .mobile-cell select { width: 60% !important; text-align: right; }
             
-            .table input, .table select {
-                text-align: right; background: #f8f9fa !important;
-                border-radius: 8px; padding: 8px 12px;
-                width: 60% !important; border: 1px solid #eee !important;
-            }
-            
-            /* Delete Button Mobile */
-            .btn-action-group { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 10px;}
+            .btn-action-group { margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; display: flex; justify-content: space-between; }
         }
 
         @media (min-width: 769px) {
             .item-row-card { display: table-row; }
-            .item-row-content { display: contents; }
-            .mobile-cell { display: table-cell; vertical-align: middle; padding: 8px; }
+            .mobile-cell { display: table-cell; vertical-align: middle; padding: 8px 4px; border-bottom: 1px solid #f0f0f0; }
             .mobile-cell::before { display: none; }
-            .btn-action-group { display: none; } /* On desktop we use the table cell actions */
+            .btn-action-group { display: none; }
         }
 
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .fc-toolbar-title { font-size: 1.1rem !important; }
-        .fc-button { font-size: 0.8rem !important; padding: 4px 8px !important; }
-        
         .calculated-field { background-color: #e9ecef !important; color: #495057; cursor: not-allowed; }
     </style>
 </head>
@@ -229,7 +231,6 @@
                 appData = snap.data();
                 if(!appData.items) appData.items = [];
                 if(!appData.tasks) appData.tasks = [];
-                // Ensure subItems array exists on older data
                 appData.items.forEach(i => { if(!i.subItems) i.subItems = []; });
             } else { saveData(); }
             renderAll();
@@ -241,22 +242,11 @@
         await setDoc(doc(db, "users", currentUser.uid), appData);
     }
 
-    // --- Logic for Items & SubItems ---
-
+    // Logic
     window.addItem = () => { 
-        appData.items.unshift({ 
-            id: Date.now(), 
-            name: '', 
-            category: 'אחר', 
-            qty: 1, 
-            est: 0, 
-            real: 0, 
-            purchased: false,
-            subItems: [] 
-        }); 
+        appData.items.unshift({ id: Date.now(), name: '', category: 'אחר', qty: 1, est: 0, real: 0, purchased: false, subItems: [] }); 
         saveData(); 
     };
-
     window.updateItem = (id, field, val) => {
         const i = appData.items.find(x => x.id === id);
         if (i) {
@@ -266,15 +256,10 @@
             saveData();
         }
     };
-
     window.deleteItem = (id) => { 
-        if(confirm('למחוק את הפריט?')) { 
-            appData.items = appData.items.filter(x => x.id !== id); 
-            saveData(); 
-        } 
+        if(confirm('למחוק את הפריט?')) { appData.items = appData.items.filter(x => x.id !== id); saveData(); } 
     };
 
-    // Sub Items Logic
     window.addSubItem = (parentId) => {
         const parent = appData.items.find(x => x.id === parentId);
         if(parent) {
@@ -283,7 +268,6 @@
             saveData();
         }
     }
-
     window.updateSubItem = (parentId, subId, field, val) => {
         const parent = appData.items.find(x => x.id === parentId);
         if(parent && parent.subItems) {
@@ -294,7 +278,6 @@
             }
         }
     }
-
     window.deleteSubItem = (parentId, subId) => {
         const parent = appData.items.find(x => x.id === parentId);
         if(parent && parent.subItems) {
@@ -303,7 +286,6 @@
         }
     }
 
-    // Filter Logic
     window.setFilter = (filter) => {
         currentFilter = filter;
         const labelMap = { 'all': 'הכל', 'purchased': 'נרכש', 'not_purchased': 'טרם נרכש', 'ריהוט': 'ריהוט', 'חשמל': 'חשמל', 'מטבח': 'מטבח', 'אחר': 'אחר' };
@@ -311,7 +293,6 @@
         renderAll();
     }
 
-    // Task Logic
     window.addTask = () => {
         const title = document.getElementById('task-desc').value;
         const date = document.getElementById('task-date').value;
@@ -320,41 +301,47 @@
     window.deleteTask = (id) => { appData.tasks = appData.tasks.filter(t => t.id !== id); saveData(); };
     window.toggleTask = (id) => { const t = appData.tasks.find(x => x.id === id); if(t) { t.done = !t.done; saveData(); } };
 
-    // --- Rendering ---
-
+    // Rendering
     function renderAll() {
         const list = document.getElementById('items-list');
         
-        // 1. Filter items
         let filteredItems = appData.items;
         if (currentFilter === 'purchased') filteredItems = appData.items.filter(i => i.purchased);
         else if (currentFilter === 'not_purchased') filteredItems = appData.items.filter(i => !i.purchased);
         else if (currentFilter !== 'all') filteredItems = appData.items.filter(i => i.category === currentFilter);
 
-        // 2. Render List
         if(filteredItems.length === 0) {
             list.innerHTML = '<div class="text-center text-muted py-5">אין פריטים להצגה</div>';
         } else {
+            // NOTE: Explicit widths added to TH for Desktop layout fixes
             list.innerHTML = `
-            <table class="table table-borderless m-0 w-100">
+            <table class="table m-0">
                 <thead class="text-muted small bg-light rounded table-main-head">
-                    <tr><th></th><th>שם</th><th width="80">קטגוריה</th><th width="60">כמות</th><th width="80">צפי</th><th width="80">בפועל</th><th width="50">נרכש</th><th width="30"></th></tr>
+                    <tr>
+                        <th width="4%"></th>
+                        <th width="32%">שם מוצר</th>
+                        <th width="15%">קטגוריה</th>
+                        <th width="10%">כמות</th>
+                        <th width="12%">צפי</th>
+                        <th width="12%">בפועל</th>
+                        <th width="8%" class="text-center">נרכש</th>
+                        <th width="7%"></th>
+                    </tr>
                 </thead>
                 <tbody>
                     ${filteredItems.map(i => {
                         const hasSub = i.subItems && i.subItems.length > 0;
-                        // Calculate totals from subitems if they exist
                         const calculatedReal = hasSub ? i.subItems.reduce((acc, s) => acc + (s.cost * s.qty), 0) : i.real;
                         
                         return `
                         <tr class="item-row-card">
                             <td class="mobile-cell" data-label="פירוט">
-                                <button class="btn btn-sm btn-outline-primary rounded-circle" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${i.id}">
-                                    <i class="fa-solid fa-list-ul"></i>
+                                <button class="btn btn-sm btn-outline-primary rounded-circle border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${i.id}">
+                                    <i class="fa-solid fa-chevron-down"></i>
                                 </button>
                             </td>
                             <td class="mobile-cell" data-label="שם מוצר">
-                                <input class="form-control form-control-sm border-0 bg-light" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="הכנס שם...">
+                                <input class="form-control form-control-sm border-0 bg-light" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="שם...">
                             </td>
                             <td class="mobile-cell" data-label="קטגוריה">
                                 <select class="form-select form-select-sm border-0 bg-light" onchange="updateItem(${i.id},'category',this.value)">
@@ -373,17 +360,15 @@
                                        onchange="updateItem(${i.id},'real',this.value)" 
                                        ${hasSub ? 'readonly' : ''}>
                             </td>
-                            <td class="mobile-cell" data-label="האם נרכש?">
-                                <div class="form-check d-flex justify-content-end justify-content-md-center">
-                                    <input type="checkbox" class="form-check-input" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)">
+                            <td class="mobile-cell text-center" data-label="האם נרכש?">
+                                <input type="checkbox" class="form-check-input mt-0" style="width: 20px !important; height: 20px;" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)">
+                            </td>
+                            <td class="mobile-cell text-end" data-label="פעולות">
+                                <i class="fa-solid fa-trash text-danger d-none d-md-inline" style="cursor:pointer" onclick="deleteItem(${i.id})"></i>
+                                <div class="btn-action-group d-md-none">
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i> מחק פריט</button>
                                 </div>
                             </td>
-                            <td class="text-end d-none d-md-table-cell" style="border:none !important">
-                                <i class="fa-solid fa-trash text-danger" style="cursor:pointer" onclick="deleteItem(${i.id})"></i>
-                            </td>
-                            <div class="btn-action-group d-md-none">
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i> מחק פריט</button>
-                            </div>
                         </tr>
                         
                         <tr>
@@ -391,18 +376,9 @@
                                 <div class="collapse" id="collapse-${i.id}">
                                     <div class="sub-items-container mx-2 mb-3">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <small class="fw-bold text-primary">פירוט תת-מוצרים עבור ${i.name || 'הפריט'}:</small>
+                                            <small class="fw-bold text-primary">פירוט תת-מוצרים:</small>
                                             <button class="btn btn-sm btn-primary py-0" onclick="addSubItem(${i.id})">+ הוסף</button>
                                         </div>
-                                        ${hasSub ? `
-                                            <div class="row g-1 fw-bold small text-muted text-center mb-1">
-                                                <div class="col-5">שם</div>
-                                                <div class="col-2">יח'</div>
-                                                <div class="col-3">מחיר</div>
-                                                <div class="col-2"></div>
-                                            </div>
-                                        ` : '<div class="text-muted small text-center">אין תתי-פריטים</div>'}
-                                        
                                         ${(i.subItems || []).map(sub => `
                                             <div class="row g-1 mb-1 align-items-center sub-row">
                                                 <div class="col-5"><input type="text" class="form-control form-control-sm" value="${sub.name}" placeholder="שם.." onchange="updateSubItem(${i.id}, ${sub.id}, 'name', this.value)"></div>
@@ -421,33 +397,27 @@
             </table>`;
         }
 
-        // 3. KPI Calculation (Fixes for Actuals)
+        // KPI Calculation
         let totalEst = 0;
         let totalReal = 0;
 
         appData.items.forEach(i => {
-            // Est
             totalEst += (i.est * i.qty);
             
-            // Real Logic:
-            // If item has subItems, sum them up. If not, use item.real * item.qty
+            // Logic Change: Sum 'Real' regardless of 'Purchased' status
+            // If it has sub-items, sum them. If not, use the main real value.
             let itemRealCost = 0;
             if (i.subItems && i.subItems.length > 0) {
                 itemRealCost = i.subItems.reduce((acc, sub) => acc + (sub.cost * sub.qty), 0);
             } else {
                 itemRealCost = i.real * i.qty;
             }
-
-            // Only add to Total Real if purchased is TRUE
-            if (i.purchased) {
-                totalReal += itemRealCost;
-            }
+            totalReal += itemRealCost; 
         });
 
         document.getElementById('kpi-est').innerText = totalEst.toLocaleString();
         document.getElementById('kpi-real').innerText = totalReal.toLocaleString();
 
-        // Tasks Render
         document.getElementById('tasks-list').innerHTML = appData.tasks.map(t => `
             <div class="glass-card p-2 mb-2 d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
