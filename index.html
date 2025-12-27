@@ -49,36 +49,36 @@
             
             .mobile-card {
                 background: white;
-                border-radius: 16px;
+                border-radius: 12px;
                 padding: 15px;
                 margin-bottom: 15px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-                border: 1px solid #f0f0f0;
-                position: relative;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                border: 1px solid #eef0f2;
+            }
+            
+            /* Input styling for mobile to ensure visibility */
+            .mobile-card input, .mobile-card select {
+                background-color: #f8f9fa; /* Light gray background */
+                border: 1px solid #e9ecef;
+                font-size: 0.95rem;
+                height: 40px;
+            }
+            .mobile-card input:focus, .mobile-card select:focus {
+                background-color: white;
+                border-color: #667eea;
             }
 
-            /* Header: Name + Category */
-            .m-card-header { border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 10px; }
-            .m-card-name input { 
-                font-weight: 700; font-size: 1.1rem; border: none; background: transparent; width: 100%; 
-                border-bottom: 2px solid transparent; transition: 0.3s; padding: 0;
-            }
-            .m-card-name input:focus { border-bottom-color: #667eea; outline: none; }
+            .m-label { font-size: 0.75rem; color: #888; margin-bottom: 2px; display: block; }
             
-            /* Grid for Data */
-            .m-card-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-            .m-data-item label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 2px; }
-            .m-data-item input, .m-data-item select { width: 100%; font-size: 0.9rem; }
-            
-            /* Payment & Category Row */
-            .m-card-details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-
-            /* Footer Actions */
-            .m-card-footer { 
-                display: flex; justify-content: space-between; align-items: center; 
-                border-top: 1px dashed #eee; padding-top: 12px; 
+            /* Card Footer Actions */
+            .m-card-footer {
+                margin-top: 15px;
+                padding-top: 10px;
+                border-top: 1px solid #f0f0f0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
             }
-            .m-btn-expand { color: #667eea; font-weight: 500; font-size: 0.9rem; background: none; border: none; padding: 0; }
         }
 
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
@@ -230,7 +230,7 @@
             return;
         } 
         
-        // --- 1. DESKTOP RENDER (Table) ---
+        // --- 1. DESKTOP RENDER (Table View) ---
         let htmlDesktop = `
         <table class="desktop-only-table">
             <colgroup>
@@ -242,7 +242,7 @@
             </thead>
             <tbody>`;
 
-        // --- 2. MOBILE RENDER (Cards) ---
+        // --- 2. MOBILE RENDER (Cards View) ---
         let htmlMobile = `<div class="mobile-only-view">`;
 
         filtered.forEach(i => {
@@ -250,7 +250,7 @@
             const realVal = hasSub ? i.subItems.reduce((a,s)=>a+(s.cost*s.qty),0) : i.real;
             const payMethod = i.paymentMethod || 'אשראי';
             
-            // Desktop Row
+            // --- Desktop Row HTML ---
             htmlDesktop += `
             <tr class="desktop-row">
                 <td class="text-center"><button class="btn btn-sm btn-outline-primary rounded-circle border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-d-${i.id}"><i class="fa-solid fa-chevron-down"></i></button></td>
@@ -265,32 +265,57 @@
             </tr>
             <tr class="desktop-row"><td colspan="9" class="p-0 border-0"><div class="collapse" id="collapse-d-${i.id}"><div class="bg-light p-3 border-bottom">${renderSubItems(i, 'd')}</div></div></td></tr>`;
 
-            // Mobile Card
+            // --- Mobile Card HTML (Built with DIVs, not Table) ---
             htmlMobile += `
             <div class="mobile-card">
-                <div class="m-card-header">
-                    <div class="m-card-name"><input type="text" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="הכנס שם מוצר..."></div>
+                <div class="mb-3">
+                    <span class="m-label">שם הפריט</span>
+                    <input type="text" class="form-control fw-bold" value="${i.name}" onchange="updateItem(${i.id},'name',this.value)" placeholder="מה קונים?">
                 </div>
                 
-                <div class="m-card-details">
-                    <div class="m-data-item"><label>קטגוריה</label><select class="form-select form-select-sm" onchange="updateItem(${i.id},'category',this.value)">${['אחר','ריהוט','חשמל','מטבח','שיפוץ'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select></div>
-                    <div class="m-data-item"><label>תשלום</label><select class="form-select form-select-sm" onchange="updateItem(${i.id},'paymentMethod',this.value)">${['אשראי','מזומן','העברה','ביט','צ\'ק'].map(c=>`<option ${c===payMethod?'selected':''}>${c}</option>`).join('')}</select></div>
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <span class="m-label">קטגוריה</span>
+                        <select class="form-select" onchange="updateItem(${i.id},'category',this.value)">${['אחר','ריהוט','חשמל','מטבח','שיפוץ'].map(c=>`<option ${c===i.category?'selected':''}>${c}</option>`).join('')}</select>
+                    </div>
+                    <div class="col-6">
+                        <span class="m-label">תשלום</span>
+                        <select class="form-select" onchange="updateItem(${i.id},'paymentMethod',this.value)">${['אשראי','מזומן','העברה','ביט','צ\'ק'].map(c=>`<option ${c===payMethod?'selected':''}>${c}</option>`).join('')}</select>
+                    </div>
                 </div>
 
-                <div class="m-card-grid">
-                    <div class="m-data-item"><label>כמות</label><input type="number" class="form-control form-control-sm" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)" ${hasSub?'disabled':''}></div>
-                    <div class="m-data-item"><label>צפי</label><input type="number" class="form-control form-control-sm" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)"></div>
-                    <div class="m-data-item"><label>בפועל</label><input type="number" class="form-control form-control-sm ${hasSub?'calculated-field':''}" value="${realVal}" onchange="updateItem(${i.id},'real',this.value)" ${hasSub?'readonly':''}></div>
+                <div class="row g-2 mb-3">
+                    <div class="col-4">
+                        <span class="m-label">כמות</span>
+                        <input type="number" class="form-control" value="${i.qty}" onchange="updateItem(${i.id},'qty',this.value)" ${hasSub?'disabled':''}>
+                    </div>
+                    <div class="col-4">
+                        <span class="m-label">צפי</span>
+                        <input type="number" class="form-control" value="${i.est}" onchange="updateItem(${i.id},'est',this.value)">
+                    </div>
+                    <div class="col-4">
+                        <span class="m-label">בפועל</span>
+                        <input type="number" class="form-control ${hasSub?'calculated-field':''}" value="${realVal}" onchange="updateItem(${i.id},'real',this.value)" ${hasSub?'readonly':''}>
+                    </div>
                 </div>
                 
                 <div class="collapse mb-3" id="collapse-m-${i.id}">
-                    <div class="bg-light p-2 rounded">${renderSubItems(i, 'm')}</div>
+                    <div class="bg-light p-2 rounded border">${renderSubItems(i, 'm')}</div>
                 </div>
 
                 <div class="m-card-footer">
-                    <button class="m-btn-expand" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-m-${i.id}"><i class="fa-solid fa-list-ul"></i> ${hasSub?' פריטים':' הוסף פירוט'}</button>
-                    <div class="form-check form-switch d-flex align-items-center gap-2"><label class="form-check-label small">נרכש?</label><input class="form-check-input" type="checkbox" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)"></div>
-                    <button class="btn btn-sm text-danger" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn btn-sm btn-link text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-m-${i.id}">
+                        <i class="fa-solid fa-list"></i> ${hasSub?' פירוט':' הוסף פירוט'}
+                    </button>
+                    
+                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                        <input class="form-check-input" type="checkbox" style="width: 35px; height: 20px;" ${i.purchased?'checked':''} onchange="updateItem(${i.id},'purchased',this.checked)">
+                        <label class="small mb-0">${i.purchased?'נרכש':'ממתין'}</label>
+                    </div>
+
+                    <button class="btn btn-sm text-danger" onclick="deleteItem(${i.id})">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                 </div>
             </div>`;
         });
@@ -298,7 +323,6 @@
         htmlDesktop += `</tbody></table>`;
         htmlMobile += `</div>`;
         
-        // Inject based on CSS media queries handling display
         list.innerHTML = htmlDesktop + htmlMobile;
 
         // KPI Calc
@@ -311,7 +335,6 @@
         document.getElementById('kpi-est').innerText = tEst.toLocaleString();
         document.getElementById('kpi-real').innerText = tReal.toLocaleString();
         
-        // Tasks
         document.getElementById('tasks-list').innerHTML = appData.tasks.map(t => `
             <div class="glass-card p-2 mb-2 d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
